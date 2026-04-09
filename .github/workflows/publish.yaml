@@ -1,0 +1,85 @@
+name: Publish extensions
+
+on:
+  push:
+    tags:
+      - 'v*'   # trigger on version tags: v1.1.0, v1.2.0…
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 1.2.0)'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          INPUT="${{ github.event.inputs.version }}"
+          echo "value=${INPUT:-${GITHUB_REF_NAME#v}}" >> $GITHUB_OUTPUT
+
+      - name: Build extensions
+        run: node build.js ${{ steps.version.outputs.value }}
+
+      - name: Package
+        run: |
+          (cd dist/chromium && zip -r ../../statuswatch-chromium.zip .)
+          (cd dist/firefox  && zip -r ../../statuswatch-firefox.zip  .)
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: extensions
+          path: |
+            statuswatch-chromium.zip
+            statuswatch-firefox.zip
+
+  deploy-worker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken:         ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId:        ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cron-worker
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox]
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: extensions
+
+      - name: Publish to Chrome Web Store
+        if: matrix.browser == 'chromium'
+        run: npx chrome-webstore-upload-cli@latest upload --auto-publish --source statuswatch-chromium.zip
+        env:
+          EXTENSION_ID:    ${{ secrets.CWS_EXTENSION_ID }}
+          CLIENT_ID:       ${{ secrets.CWS_CLIENT_ID }}
+          CLIENT_SECRET:   ${{ secrets.CWS_CLIENT_SECRET }}
+          REFRESH_TOKEN:   ${{ secrets.CWS_REFRESH_TOKEN }}
+
+      - name: Publish to Firefox Add-ons
+        if: matrix.browser == 'firefox'
+        run: |
+          unzip statuswatch-firefox.zip -d firefox-ext
+          npx web-ext@latest sign --source-dir firefox-ext --channel listed
+        env:
+          WEB_EXT_API_KEY:    ${{ secrets.AMO_API_KEY }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_API_SECRET }}
