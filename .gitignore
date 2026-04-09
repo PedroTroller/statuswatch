@@ -1,0 +1,5 @@
+dist/
+proxy/dist/
+chromium/config.js
+firefox/config.js
+cron-worker/.wrangler/
