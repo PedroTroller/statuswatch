@@ -1,0 +1,25 @@
+name: Improvement suggestion
+description: Propose an enhancement to an existing feature.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What would you like improved?
+      description: A clear description of the current behaviour and what you'd like to see instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Why would this be useful?
+      description: Explain the use-case or problem this improvement solves.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, mockups, or any other information that might help.

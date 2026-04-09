@@ -1,0 +1,42 @@
+name: New service request
+description: Request a new service to be added to the catalog.
+labels: [new-service]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Service name
+      placeholder: "e.g. Acme Cloud"
+    validations:
+      required: true
+
+  - type: input
+    id: status_page
+    attributes:
+      label: Status page URL
+      description: The public status page (e.g. Statuspage.io, Instatus, etc.).
+      placeholder: "https://status.example.com"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Status page provider
+      description: Which platform powers the status page, if known.
+      options:
+        - Statuspage.io (Atlassian)
+        - incident.io
+        - status.io
+        - UptimeRobot
+        - StatusCast
+        - SorryApp
+        - Other / Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that might help — related domains, API base URL, etc.
