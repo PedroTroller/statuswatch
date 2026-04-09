@@ -1,0 +1,263 @@
+name: Fetch & publish status cache
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Every 5 minutes (GitHub Actions minimum interval).
+    - cron: '*/5 * * * *'
+  # Allow triggering manually from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only allow one deployment at a time; cancel any in-progress run if a new
+# one is triggered so the cache never lags more than one cycle behind.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # Restore the full dist from the most recent run so fetch-all.js can skip
+      # services fetched within the last 5 minutes and icons already on disk.
+      - name: Restore dist cache
+        uses: actions/cache/restore@v4
+        with:
+          path: proxy/dist
+          key: dist-${{ github.run_id }}
+          restore-keys: dist-
+
+      - name: Fetch all status pages
+        run: node proxy/fetch-all.js
+
+      - name: Upload fetch-error logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fetch-error-logs
+          path: proxy/dist/logs/
+          if-no-files-found: ignore
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: proxy/dist/
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      # Clear logs before caching — they were already uploaded as an artifact and
+      # must not accumulate across runs or be re-reported on the next cycle.
+      - name: Clear fetch-error logs
+        run: rm -rf proxy/dist/logs/
+
+      # Save after deploy so the cache always reflects what was actually deployed.
+      - name: Save dist cache
+        uses: actions/cache/save@v4
+        with:
+          path: proxy/dist
+          key: dist-${{ github.run_id }}
+
+  report-fetch-errors:
+    needs: fetch-and-deploy
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download fetch-error logs
+        id: download
+        uses: actions/download-artifact@v4
+        with:
+          name: fetch-error-logs
+          path: logs/
+        continue-on-error: true
+
+      - name: Report errors as GitHub issues
+        if: steps.download.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs   = require('fs');
+            const path = require('path');
+
+            // Build a set of beta service IDs from the catalog.
+            const catalogSrc = fs.readFileSync('proxy/catalog.js', 'utf8');
+            const CATALOG_MAP = new Function(`${catalogSrc}; return CATALOG;`)();
+            const betaSet = new Set(
+              Object.entries(CATALOG_MAP)
+                .filter(([, s]) => s.beta)
+                .map(([id]) => id)
+            );
+
+            // Ensure the shared beta label exists.
+            const BETA_LABEL = 'beta';
+            try {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner, repo: context.repo.repo,
+                name: BETA_LABEL, color: 'ffd700',
+                description: 'Service is in beta — failures may be expected',
+              });
+            } catch (e) {
+              if (e.status !== 422) throw e; // 422 = label already exists
+            }
+
+            // Parse a log file into individual error entries.
+            // New format (one entry):
+            //   [timestamp] [type] apiBase=url\nstack_or_message\n\n
+            // Old format (one entry):
+            //   [timestamp] Error: message\n
+            function parseLogEntries(logContent) {
+              return logContent
+                .split(/\n\n+/)
+                .map(e => e.trim())
+                .filter(Boolean)
+                .map(entry => {
+                  const lines  = entry.split('\n');
+                  const header = lines[0];
+                  const body   = lines.slice(1).join('\n').trim();
+
+                  const newFmt = header.match(/^\[([^\]]+)\] \[([^\]]+)\] apiBase=(.+)$/);
+                  if (newFmt) return { timestamp: newFmt[1], type: newFmt[2], apiBase: newFmt[3], body };
+
+                  const oldFmt = header.match(/^\[([^\]]+)\] (.+)$/);
+                  if (oldFmt) return { timestamp: oldFmt[1], type: null, apiBase: null, body: oldFmt[2] };
+
+                  return { timestamp: null, type: null, apiBase: null, body: entry };
+                });
+            }
+
+            // Build a structured GitHub markdown comment from parsed log entries.
+            function buildCommentBody(serviceId, entries, reportedAt) {
+              const lines = [
+                `### Fetch failures for \`${serviceId}\` — ${entries.length} occurrence(s)`,
+                `> Reported at \`${reportedAt}\``,
+                '',
+              ];
+
+              for (const { timestamp, type, apiBase, body } of entries) {
+                const meta = [
+                  timestamp ? `<b>Time:</b> <code>${timestamp}</code>` : null,
+                  type      ? `<b>Type:</b> <code>${type}</code>`      : null,
+                  apiBase   ? `<b>API:</b> <code>${apiBase}</code>`    : null,
+                ].filter(Boolean).join(' · ');
+
+                lines.push('<details>');
+                lines.push(`<summary>${meta}</summary>`);
+                lines.push('');
+                lines.push('```');
+                lines.push(body || '(no details)');
+                lines.push('```');
+                lines.push('');
+                lines.push('</details>');
+                lines.push('');
+              }
+
+              return lines.join('\n');
+            }
+
+            const logFiles = fs.readdirSync('logs').filter(f => f.endsWith('.log'));
+            if (logFiles.length === 0) {
+              console.log('No error logs — nothing to report.');
+              return;
+            }
+
+            for (const logFile of logFiles) {
+              const serviceId  = path.basename(logFile, '.log');
+              const logContent = fs.readFileSync(path.join('logs', logFile), 'utf8');
+              const issueTitle = `[fetch-error] ${serviceId}`;
+              const label      = `service: ${serviceId}`;
+              const isBeta     = betaSet.has(serviceId);
+
+              // Create the per-service label if it does not already exist.
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  name: label, color: 'd93f0b',
+                  description: `Fetch-failure reports for ${serviceId}`,
+                });
+              } catch (e) {
+                if (e.status !== 422) throw e; // 422 = label already exists
+              }
+
+              // Find open issue, then closed, then create.
+              let issue;
+
+              const open = await github.rest.issues.listForRepo({
+                owner: context.repo.owner, repo: context.repo.repo,
+                state: 'open', labels: label,
+              });
+              issue = open.data.find(i => i.title === issueTitle);
+
+              if (issue) {
+                console.log(`Found existing open issue #${issue.number} for ${serviceId}.`);
+              } else {
+                const closed = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  state: 'closed', labels: label,
+                });
+                const closedIssue = closed.data.find(i => i.title === issueTitle);
+
+                if (closedIssue) {
+                  console.log(`Reopening closed issue #${closedIssue.number} for ${serviceId}...`);
+                  await github.rest.issues.update({
+                    owner: context.repo.owner, repo: context.repo.repo,
+                    issue_number: closedIssue.number, state: 'open',
+                  });
+                  issue = closedIssue;
+                } else {
+                  console.log(`Creating issue for ${serviceId}...`);
+                  const created = await github.rest.issues.create({
+                    owner: context.repo.owner, repo: context.repo.repo,
+                    title: issueTitle, labels: [],
+                    body: `Automated report: fetch failures were detected for service \`${serviceId}\`.`,
+                  });
+                  issue = created.data;
+                  console.log(`Created issue #${issue.number}.`);
+                  // Wait for GitHub to fully index the new issue before commenting.
+                  await new Promise(r => setTimeout(r, 3000));
+                }
+              }
+
+              // Ensure required labels are present on every create or comment.
+              const currentLabels = issue.labels.map(l => l.name);
+              const requiredLabels = [label, ...(isBeta ? [BETA_LABEL] : [])];
+              const missingLabels  = requiredLabels.filter(l => !currentLabels.includes(l));
+              if (missingLabels.length > 0) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: issue.number, labels: missingLabels,
+                });
+              }
+
+              const reportedAt = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+              const entries    = parseLogEntries(logContent);
+              const body       = buildCommentBody(serviceId, entries, reportedAt);
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issue.number, body,
+              });
+              console.log(`Commented on issue #${issue.number}.`);
+            }

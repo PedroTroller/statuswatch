@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <title>Status Pages</title>
+  <circle cx="64" cy="64" r="63" fill="#6366F1"/>
+  <polyline
+    points="28.2,67.8 53.8,90.9 99.8,37.1"
+    fill="none"
+    stroke="white"
+    stroke-width="14.7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Status Pages",
+  "version": "0.1.0",
+  "description": "Track services like GitHub, Stripe, AWS, Slack and Vercel. Get notified when they go down or recover.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "status-pages@pedrotroller.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "alarms",
+    "notifications",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://localhost/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "common/popup.html",
+    "default_title": "Status Pages",
+    "default_icon": {
+      "16": "common/icons/icon16.png",
+      "32": "common/icons/icon32.png",
+      "48": "common/icons/icon48.png",
+      "128": "common/icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "common/icons/icon16.png",
+    "32": "common/icons/icon32.png",
+    "48": "common/icons/icon48.png",
+    "128": "common/icons/icon128.png"
+  }
+}

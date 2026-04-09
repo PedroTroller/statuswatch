@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+
+    <header class="header">
+      <span class="header-title">Status Pages</span>
+      <button id="add-btn" class="btn-icon" title="Add service">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <div id="staleness-banner" class="staleness-banner hidden"></div>
+
+    <!-- Sliding views: services (left) ↔ catalog (right) -->
+    <div class="views-wrapper">
+      <div class="views-track" id="views-track">
+
+        <!-- Left view: tracked services -->
+        <div class="view-pane">
+          <div id="tab-suggestion" class="tab-suggestion hidden"></div>
+          <div id="service-list" class="service-list"></div>
+        </div>
+
+        <!-- Right view: catalog / add service -->
+        <div class="view-pane">
+          <div id="add-panel" class="add-panel">
+            <div class="add-search">
+              <input
+                id="catalog-search"
+                type="text"
+                placeholder="Search services…"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div id="catalog-items" class="catalog-items"></div>
+            <div class="catalog-footer">
+              Missing a service?
+              <a href="https://github.com/PedroTroller/statuswatch/issues/new?template=new_service.yaml" target="_blank">Open a GitHub issue →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="popup-footer">
+    <a href="https://github.com/PedroTroller/statuswatch/issues/new/choose" target="_blank">Report a bug or suggest an improvement</a>
+  </footer>
+
+  <script src="../browser-compat.js"></script>
+  <script src="../config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
