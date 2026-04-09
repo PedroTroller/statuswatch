@@ -1,0 +1,9 @@
+name               = "statuswatch-cron"
+main               = "worker.js"
+compatibility_date = "2025-01-01"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[observability]
+enabled = true

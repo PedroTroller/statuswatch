@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /home/pedro/Works/status-pages/chromium)",
+      "Bash(git mv:*)",
+      "Bash(ln -s ../common /home/pedro/Works/status-pages/chromium/common)",
+      "Bash(ln -s ../common /home/pedro/Works/status-pages/firefox/common)",
+      "Bash(node /home/pedro/Works/status-pages/build.js)",
+      "Bash(node /home/pedro/Works/status-pages/build.js bad-version)",
+      "Bash(node /home/pedro/Works/status-pages/build.js 1.2.0)"
+    ]
+  }
+}
