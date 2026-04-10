@@ -35,7 +35,7 @@ jobs:
       # Icons rarely change — cache them keyed on catalog.js so they're only
       # re-fetched when the service list changes, not on every 5-minute cron run.
       - name: Cache service icons
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: proxy/dist/icons
           key: service-icons-v1-${{ hashFiles('proxy/catalog.js') }}
