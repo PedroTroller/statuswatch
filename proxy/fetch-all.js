@@ -42,6 +42,17 @@ function ttlForResult(result) {
   return (!result.error && result.status === 'operational') ? TTL_OPERATIONAL_S : TTL_NON_OPERATIONAL_S;
 }
 
+// `err.stack` omits `cause`, which is exactly where a failed fetch keeps the
+// real reason (ENOTFOUND, ECONNRESET, certificate errors). Walk the chain so
+// the log holds the whole error, not just its outermost layer.
+function formatError(err, depth = 0) {
+  if (!err) return '';
+  const head = err.stack ?? `${err.name ?? 'Error'}: ${err.message ?? String(err)}`;
+  return (depth >= 4 || !err.cause)
+    ? head
+    : `${head}\nCaused by: ${formatError(err.cause, depth + 1)}`;
+}
+
 function timeout(ms) {
   return new Promise((_, reject) => {
     const t = setTimeout(() => reject(new Error(`Timed out after ${ms / 1000}s`)), ms);
@@ -309,12 +320,12 @@ async function main() {
           activeIncidents: [],
           lastFetched:     Date.now(),
           error:           err.message,
-          errorStack:      err.stack ?? null,
+          errorStack:      formatError(err),
         };
       }
       if (result.error) {
         const header = `[${generatedAt}] [${service.type}] statusPageUrl=${service.statusPageUrl}`;
-        const body   = result.errorStack ?? `Error: ${result.error}`;
+        const body   = result.errorStack || `Error: ${result.error}`;
         fs.appendFileSync(path.join(logsDir, `${service.id}.log`), `${header}\n${body}\n\n`);
         failedCount++;
       } else {

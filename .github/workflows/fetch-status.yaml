@@ -134,11 +134,22 @@ jobs:
               if (e.status !== 422) throw e; // 422 = label already exists
             }
 
-            // Parse a log file into individual error entries.
-            // New format (one entry):
-            //   [timestamp] [type] apiBase=url\nstack_or_message\n\n
-            // Old format (one entry):
-            //   [timestamp] Error: message\n
+            const joinLines = (...parts) => parts.filter(Boolean).join('\n');
+
+            const escapeHtml = (s) => s
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+
+            // Parse a log file into individual error entries. proxy/fetch-all.js
+            // appends one entry per failure, shaped as:
+            //   [timestamp] [type] statusPageUrl=url
+            //   <the full error: stack, plus any `Caused by:` chain>
+            //   <blank line>
+            //
+            // Everything after the header line is the error itself and is kept
+            // verbatim. An unrecognised header degrades the metadata; it must
+            // never swallow the error that header introduces.
             function parseLogEntries(logContent) {
               return logContent
                 .split(/\n\n+/)
@@ -149,37 +160,54 @@ jobs:
                   const header = lines[0];
                   const body   = lines.slice(1).join('\n').trim();
 
-                  const newFmt = header.match(/^\[([^\]]+)\] \[([^\]]+)\] apiBase=(.+)$/);
-                  if (newFmt) return { timestamp: newFmt[1], type: newFmt[2], apiBase: newFmt[3], body };
+                  // `statusPageUrl=` is the key fetch-all.js writes; `apiBase=`
+                  // was used by earlier revisions and may sit in a restored log.
+                  const full = header.match(/^\[([^\]]+)\] \[([^\]]+)\] (?:statusPageUrl|apiBase)=(.+)$/);
+                  if (full) return { timestamp: full[1], type: full[2], url: full[3], body };
 
-                  const oldFmt = header.match(/^\[([^\]]+)\] (.+)$/);
-                  if (oldFmt) return { timestamp: oldFmt[1], type: null, apiBase: null, body: oldFmt[2] };
+                  const typed = header.match(/^\[([^\]]+)\] \[([^\]]+)\] ?(.*)$/);
+                  if (typed) return { timestamp: typed[1], type: typed[2], url: null, body: joinLines(typed[3], body) };
 
-                  return { timestamp: null, type: null, apiBase: null, body: entry };
+                  const stamped = header.match(/^\[([^\]]+)\] ?(.*)$/);
+                  if (stamped) return { timestamp: stamped[1], type: null, url: null, body: joinLines(stamped[2], body) };
+
+                  return { timestamp: null, type: null, url: null, body: entry };
                 });
             }
 
             // Build a structured GitHub markdown comment from parsed log entries.
+            // The error is rendered expanded: the whole point of the issue is to
+            // show what failed without anyone having to click to find out.
             function buildCommentBody(serviceId, entries, reportedAt, jobUrl) {
               const lines = [
-                `### Fetch failures for \`${serviceId}\` — ${entries.length} occurrence(s)`,
+                `### Fetch failures for \`${serviceId}\` (${entries.length} occurrence(s))`,
                 `> Reported at \`${reportedAt}\` · [View CI run](${jobUrl})`,
                 '',
               ];
 
-              for (const { timestamp, type, apiBase, body } of entries) {
-                const meta = [
-                  timestamp ? `<b>Time:</b> <code>${timestamp}</code>` : null,
-                  type      ? `<b>Type:</b> <code>${type}</code>`      : null,
-                  apiBase   ? `<b>API:</b> <code>${apiBase}</code>`    : null,
+              for (const { timestamp, type, url, body } of entries) {
+                const error   = body || '(no details)';
+                const summary = error.split('\n')[0];
+                const meta    = [
+                  timestamp ? `<code>${timestamp}</code>` : null,
+                  type      ? `<code>${type}</code>`      : null,
                 ].filter(Boolean).join(' · ');
 
-                lines.push('<details>');
-                lines.push(`<summary>${meta}</summary>`);
+                // Outrun any backtick run inside the error so the fence holds.
+                const fence = '`'.repeat(
+                  Math.max(3, ...[...error.matchAll(/`+/g)].map(m => m[0].length + 1))
+                );
+
+                lines.push('<details open>');
+                lines.push(`<summary>${meta}${meta ? ' · ' : ''}<b>${escapeHtml(summary)}</b></summary>`);
                 lines.push('');
-                lines.push('```');
-                lines.push(body || '(no details)');
-                lines.push('```');
+                if (url) {
+                  lines.push(`Status page: ${url}`);
+                  lines.push('');
+                }
+                lines.push(fence);
+                lines.push(error);
+                lines.push(fence);
                 lines.push('');
                 lines.push('</details>');
                 lines.push('');
