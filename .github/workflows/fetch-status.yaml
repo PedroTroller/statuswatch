@@ -4,7 +4,9 @@ on:
   push:
     branches: [main]
   schedule:
-    # Every 5 minutes (GitHub Actions minimum interval).
+    # Hourly safety net only. The 5-minute cadence comes from the Cloudflare
+    # cron worker (cron-worker/), which dispatches this workflow via the API
+    # because GitHub's own scheduler throttles short intervals.
     - cron: '0 * * * *'
   # Allow triggering manually from the Actions tab.
   workflow_dispatch:
@@ -16,13 +18,19 @@ permissions:
 
 # Only allow one deployment at a time; cancel any in-progress run if a new
 # one is triggered so the cache never lags more than one cycle behind.
+# `cancel-in-progress: true` is also what keeps a run stuck on the
+# github-pages environment gate from holding the group forever: with `false`,
+# such a run blocks every later dispatch, which then gets cancelled while
+# still pending and never publishes anything.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   fetch-and-deploy:
     runs-on: ubuntu-latest
+    # A healthy run takes ~1 minute; well under the 5-minute dispatch period.
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
