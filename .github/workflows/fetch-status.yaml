@@ -122,6 +122,12 @@ jobs:
               Object.entries(CATALOG_MAP).map(([id, s]) => [id, s.type])
             );
 
+            // GitHub rejects new comments once an issue reaches 2500 of them, which
+            // permanently wedges this job for any service that keeps failing. Rotate
+            // well before that ceiling: the saturated issue is closed as a duplicate
+            // and a fresh successor takes over, linking back to what it continues.
+            const COMMENT_LIMIT = 2000;
+
             // Ensure the shared beta label exists.
             const BETA_LABEL = 'beta';
             try {
@@ -255,36 +261,123 @@ jobs:
                 }
               }
 
-              // Find open issue, then closed, then create.
+              // Resolve the live issue for this service.
+              //
+              // Titles are `[fetch-error] <id>` for the original issue and
+              // `[fetch-error] <id> (part N)` for every successor created by a
+              // rotation, so the highest part number is always the live one.
+              const partOf = (title) => {
+                if (title === issueTitle) return 1;
+                const m = title.match(/^\[fetch-error\] (.+) \(part (\d+)\)$/);
+                return m && m[1] === serviceId ? Number(m[2]) : null;
+              };
+              const titleForPart = (n) =>
+                n <= 1 ? issueTitle : `${issueTitle} (part ${n})`;
+
+              const byPartDesc = (issues) => issues
+                .map(i => ({ issue: i, part: partOf(i.title) }))
+                .filter(x => x.part !== null)
+                .sort((a, b) => b.part - a.part);
+
+              // Retire a saturated issue and open its successor, linking both ways.
+              async function rotate(saturated, currentPart) {
+                const next = currentPart + 1;
+                console.log(
+                  `Issue #${saturated.number} has ${saturated.comments} comments; ` +
+                  `rotating to part ${next}...`
+                );
+
+                const created = await github.rest.issues.create({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  title: titleForPart(next), labels: [],
+                  body: [
+                    `Automated report: fetch failures were detected for service \`${serviceId}\`.`,
+                    '',
+                    `Continues #${saturated.number}, retired after reaching ` +
+                    `${saturated.comments} comments (GitHub rejects new comments past 2500).`,
+                  ].join('\n'),
+                });
+                console.log(`Created issue #${created.data.number}.`);
+
+                // Forward pointer on the retired issue. Best effort: the hard
+                // ceiling may already have been reached before this rotation.
+                try {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner, repo: context.repo.repo,
+                    issue_number: saturated.number,
+                    body: `Comment limit reached. Reporting continues in #${created.data.number}.`,
+                  });
+                } catch (e) {
+                  console.log(`Could not comment on #${saturated.number}: ${e.message}`);
+                }
+
+                // `duplicate` is what "Close as duplicate" records. Fall back to
+                // `not_planned` if the API rejects that reason.
+                try {
+                  await github.rest.issues.update({
+                    owner: context.repo.owner, repo: context.repo.repo,
+                    issue_number: saturated.number,
+                    state: 'closed', state_reason: 'duplicate',
+                  });
+                } catch (e) {
+                  if (e.status !== 422) throw e;
+                  console.log(`state_reason=duplicate rejected; closing #${saturated.number} as not_planned.`);
+                  await github.rest.issues.update({
+                    owner: context.repo.owner, repo: context.repo.repo,
+                    issue_number: saturated.number,
+                    state: 'closed', state_reason: 'not_planned',
+                  });
+                }
+
+                // Wait for GitHub to fully index the new issue before commenting.
+                await new Promise(r => setTimeout(r, 3000));
+                return { issue: created.data, part: next };
+              }
+
               let issue;
+              let part;
 
               const open = await github.rest.issues.listForRepo({
                 owner: context.repo.owner, repo: context.repo.repo,
-                state: 'open', labels: label,
+                state: 'open', labels: label, per_page: 100,
               });
-              issue = open.data.find(i => i.title === issueTitle);
+              const openCandidates = byPartDesc(open.data);
 
-              if (issue) {
+              if (openCandidates.length > 0) {
+                ({ issue, part } = openCandidates[0]);
                 console.log(`Found existing open issue #${issue.number} for ${serviceId}.`);
               } else {
                 const closed = await github.rest.issues.listForRepo({
                   owner: context.repo.owner, repo: context.repo.repo,
-                  state: 'closed', labels: label,
+                  state: 'closed', labels: label, per_page: 100,
                 });
-                const closedIssue = closed.data.find(i => i.title === issueTitle);
+                const closedCandidates = byPartDesc(closed.data);
 
-                if (closedIssue) {
-                  console.log(`Reopening closed issue #${closedIssue.number} for ${serviceId}...`);
+                // Only ever reopen the most recent part, and only if it can still
+                // take comments. A rotated-out issue sits at the ceiling, so
+                // commenting on it would fail all over again, and reviving an
+                // older part while a newer one exists would scramble the history.
+                // When the latest part is unusable, start a fresh one instead.
+                const latest   = closedCandidates[0];
+                const reusable = latest
+                  && latest.issue.state_reason !== 'duplicate'
+                  && latest.issue.comments < COMMENT_LIMIT
+                  ? latest
+                  : null;
+
+                if (reusable) {
+                  console.log(`Reopening closed issue #${reusable.issue.number} for ${serviceId}...`);
                   await github.rest.issues.update({
                     owner: context.repo.owner, repo: context.repo.repo,
-                    issue_number: closedIssue.number, state: 'open',
+                    issue_number: reusable.issue.number, state: 'open',
                   });
-                  issue = closedIssue;
+                  ({ issue, part } = reusable);
                 } else {
-                  console.log(`Creating issue for ${serviceId}...`);
+                  part = latest ? latest.part + 1 : 1;
+                  console.log(`Creating issue for ${serviceId} (part ${part})...`);
                   const created = await github.rest.issues.create({
                     owner: context.repo.owner, repo: context.repo.repo,
-                    title: issueTitle, labels: [],
+                    title: titleForPart(part), labels: [],
                     body: `Automated report: fetch failures were detected for service \`${serviceId}\`.`,
                   });
                   issue = created.data;
@@ -292,6 +385,11 @@ jobs:
                   // Wait for GitHub to fully index the new issue before commenting.
                   await new Promise(r => setTimeout(r, 3000));
                 }
+              }
+
+              // Rotate before commenting if the issue is already at the ceiling.
+              if (issue.comments >= COMMENT_LIMIT) {
+                ({ issue, part } = await rotate(issue, part));
               }
 
               // Ensure required labels are present on every create or comment.
