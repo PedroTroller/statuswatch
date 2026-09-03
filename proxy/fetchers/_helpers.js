@@ -8,6 +8,23 @@ async function safeJson(res) {
   try { return await res.json(); } catch { return null; }
 }
 
+// Reads a response as JSON while keeping the raw body, so that a validation
+// failure can report what was actually served. A status page that has migrated
+// off its previous platform typically answers /api/v2/*.json with an HTML page
+// and HTTP 200, which a bare `Invalid status response` does not convey.
+async function jsonWithBody(res) {
+  const text = await res.text();
+  let data = null;
+  try { data = JSON.parse(text); } catch { /* not JSON: data stays null */ }
+  return { data, text, contentType: res.headers.get('content-type') ?? 'unknown' };
+}
+
+// One-line description of a fetched body, for use in error messages.
+function _describeBody({ text, contentType }) {
+  const excerpt = text.trim().replace(/\s+/g, ' ').slice(0, 200);
+  return `content-type=${contentType}, ${text.length} bytes, body=${excerpt || '(empty)'}`;
+}
+
 // Maps an old-style indicator string to a component-status string.
 // Used by fetchers that compute an overall indicator before building components
 // (e.g. to create a synthetic component when no component list is available).
@@ -42,4 +59,4 @@ function _distributeIncidents(components, incidents, fallbackStatus = 'degraded_
   );
 }
 
-module.exports = { safeJson, _indicatorToStatus, _distributeIncidents };
+module.exports = { safeJson, jsonWithBody, _describeBody, _indicatorToStatus, _distributeIncidents };

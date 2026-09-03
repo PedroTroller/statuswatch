@@ -75,10 +75,16 @@ function mockFetch(map) {
     }
     if (entry === undefined) throw new Error(`Unexpected fetch: ${urlString}`);
     if (entry instanceof Error) throw entry;
-    const { status = 200, body = null, arrayBuffer: rawArrayBuffer = null } = entry;
+    const {
+      status = 200,
+      body = null,
+      arrayBuffer: rawArrayBuffer = null,
+      contentType = typeof body === 'string' ? 'text/html' : 'application/json',
+    } = entry;
     return {
       ok:          status >= 200 && status < 300,
       status,
+      headers:     new Headers({ 'content-type': contentType }),
       json:        async () => body,
       text:        async () => (typeof body === 'string' ? body : JSON.stringify(body)),
       arrayBuffer: async () => rawArrayBuffer ?? new ArrayBuffer(0),
@@ -181,6 +187,62 @@ test('fetchStatuspageStatus: maintenance window → indicator is maintenance', a
   const result = await fetchStatuspageStatus(STATUSPAGE_SERVICE);
   assert.strictEqual(result.status, StatusEnum.UNDER_MAINTENANCE);
   assert.equal(result.components[0].status, 'under_maintenance');
+});
+
+test('fetchStatuspageStatus: missing components endpoint falls back to the page indicator', async () => {
+  // Some Statuspage instances (e.g. Fivetran) answer components.json with 404.
+  // The page indicator is authoritative, so the fetch must still succeed, and
+  // must not report `operational` off the back of an empty component list.
+  mockFetch({
+    'https://sp.example.com/api/v2/status.json': {
+      body: { status: { indicator: 'minor', description: 'Minor Service Outage' } },
+    },
+    'https://sp.example.com/api/v2/components.json': { status: 404, body: null },
+    'https://sp.example.com/api/v2/incidents/unresolved.json': { body: { incidents: [] } },
+  });
+
+  const result = await fetchStatuspageStatus(STATUSPAGE_SERVICE);
+  assert.strictEqual(result.status, StatusEnum.DEGRADED_PERFORMANCE);
+  assert.equal(result.components.length, 1);
+  assert.equal(result.components[0].id, 'service');
+  assert.equal(result.components[0].status, 'degraded_performance');
+});
+
+test('fetchStatuspageStatus: an empty component list still reflects the indicator', async () => {
+  mockFetch({
+    'https://sp.example.com/api/v2/status.json': {
+      body: { status: { indicator: 'critical', description: 'Major Outage' } },
+    },
+    'https://sp.example.com/api/v2/components.json': { body: { components: [] } },
+    'https://sp.example.com/api/v2/incidents/unresolved.json': { body: { incidents: [] } },
+  });
+
+  const result = await fetchStatuspageStatus(STATUSPAGE_SERVICE);
+  assert.strictEqual(result.status, StatusEnum.MAJOR_OUTAGE);
+});
+
+test('fetchStatuspageStatus: HTML served as 200 reports what was received', async () => {
+  // A page that has migrated off Statuspage answers /api/v2/status.json with
+  // its HTML shell and HTTP 200. The error must name the URL and the body.
+  mockFetch({
+    'https://sp.example.com/api/v2/status.json': {
+      body: '<!DOCTYPE html><html><head><title>Status</title></head></html>',
+      contentType: 'text/html',
+    },
+    'https://sp.example.com/api/v2/components.json': { body: { components: [] } },
+    'https://sp.example.com/api/v2/incidents/unresolved.json': { body: { incidents: [] } },
+  });
+
+  await assert.rejects(
+    () => fetchStatuspageStatus(STATUSPAGE_SERVICE),
+    (err) => {
+      assert.match(err.message, /Invalid status response/);
+      assert.match(err.message, /api\/v2\/status\.json/);
+      assert.match(err.message, /content-type=text\/html/);
+      assert.match(err.message, /<!DOCTYPE html>/);
+      return true;
+    },
+  );
 });
 
 test('fetchStatuspageStatus: throws on non-2xx status endpoint', async () => {
