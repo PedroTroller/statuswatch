@@ -245,6 +245,32 @@ test('fetchStatuspageStatus: HTML served as 200 reports what was received', asyn
   );
 });
 
+test('fetchIncidentioStatus: page with no components surfaces an unresolved incident', async () => {
+  // Shape of Intercom's Fin status page: components.json is an empty list,
+  // incidents/unresolved.json does not exist, and incidents carry no
+  // `shortlink`, so the incident URL has to be built from the id.
+  mockFetch({
+    'https://sp.example.com/api/v2/status.json': {
+      body: { status: { indicator: 'major', description: 'Partial Outage' } },
+    },
+    'https://sp.example.com/api/v2/components.json': { body: { components: [] } },
+    'https://sp.example.com/api/v2/incidents.json': {
+      body: { incidents: [
+        { id: '01M1KTSPSFBJ50NX1M13608HHH', name: 'Fin failures in Australia region',
+          status: 'investigating', impact: 'critical' },
+        { id: '01OLDRESOLVED', name: 'Old one', status: 'resolved', impact: 'minor' },
+      ]},
+    },
+  });
+
+  const result = await fetchIncidentioStatus(STATUSPAGE_SERVICE);
+  assert.strictEqual(result.status, StatusEnum.PARTIAL_OUTAGE);
+  assert.equal(result.activeIncidents.length, 1);
+  assert.equal(result.activeIncidents[0].name, 'Fin failures in Australia region');
+  assert.equal(result.activeIncidents[0].url,
+    'https://sp.example.com/incidents/01M1KTSPSFBJ50NX1M13608HHH');
+});
+
 test('fetchStatuspageStatus: throws on non-2xx status endpoint', async () => {
   mockFetch({
     'https://sp.example.com/api/v2/status.json':     { status: 503, body: null },

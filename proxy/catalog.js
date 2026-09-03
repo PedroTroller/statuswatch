@@ -507,11 +507,15 @@ const CATALOG = {
     relatedDomains: ['infura.io', '*.infura.io'],
     searchAliases: ['web3', 'ethereum', 'ipfs', 'blockchain', 'rpc', 'node', 'metamask'],
   },
+  // Intercom retired intercomstatus.com: it now redirects to the Fin status
+  // page. That page exposes no /api/v2/incidents/unresolved.json and no
+  // `shortlink` on incidents, so it must be read as `incidentio`
+  // (/api/v2/incidents.json, resolved filtered client-side), not `statuspage`.
   'intercom': {
     name: 'Intercom',
-    type: 'statuspage',
+    type: 'incidentio',
     websiteUrl: 'https://intercom.com',
-    statusPageUrl: 'https://www.intercomstatus.com',
+    statusPageUrl: 'https://www.finstatus.com',
     relatedDomains: ['intercom.com', '*.intercom.com', 'intercom.io', '*.intercom.io'],
     searchAliases: ['customer support', 'chat', 'messaging', 'helpdesk', 'live chat'],
   },

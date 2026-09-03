@@ -443,8 +443,8 @@ Sorted by number of services using each integration.
 
 | Type | # | Used by |
 |---|---|---|
-| `statuspage` | 82 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
-| `incidentio` | 10 | OpenAI, Miro, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Tinybird, Zapier |
+| `statuspage` | 81 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
+| `incidentio` | 11 | OpenAI, Miro, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Tinybird, Zapier, Intercom |
 | `statusio` | 5 | Docker, GitLab, Neon, Dashlane, Let's Encrypt |
 | `site24x7` | 3 | ConfigCat, ManageEngine, Zoho |
 | `google` | 2 | Google Workspace, Google Cloud |
