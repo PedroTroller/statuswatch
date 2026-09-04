@@ -21,11 +21,15 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 
 ## Tracked services
 
-122 services across all major categories.
+177 services across all major categories.
 
 ### AI & LLMs
+- [Browserbase](https://status.browserbase.com)
 - [Claude](https://status.claude.com)
 - [Cohere](https://status.cohere.com)
+- [E2B](https://status.e2b.dev)
+- [ElevenLabs](https://status.elevenlabs.io)
+- [Fireworks AI](https://status.fireworks.ai)
 - [Groq](https://groqstatus.com)
 - [Mistral AI](https://status.mistral.ai)
 - [OpenAI](https://status.openai.com)
@@ -34,6 +38,8 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 ### Analytics & Data
 - [Airbyte](https://status.airbyte.com)
 - [Algolia](https://status.algolia.com)
+- [Amplitude](https://status.amplitude.com)
+- [Confluent](https://status.confluent.cloud)
 - [Fivetran](https://status.fivetran.com)
 - [Metabase](https://status.metabase.com)
 - [Mixpanel](https://www.mixpanelstatus.com)
@@ -45,29 +51,41 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 ### CI/CD & Developer Tools
 - [Apify](https://status.apify.com)
 - [Axiom](https://axiomdev.statuspage.io)
+- [Bitbucket](https://bitbucket.status.atlassian.com)
+- [Bitrise](https://status.bitrise.io)
 - [Buildkite](https://www.buildkitestatus.com)
 - [CircleCI](https://status.circleci.com)
 - [Cloudsmith](https://status.cloudsmith.com)
+- [Codecov](https://status.codecov.com)
 - [ConfigCat](https://status.configcat.com)
+- [crates.io](https://status.crates.io)
 - [Cursor](https://status.cursor.com)
 - [Deno](https://denostatus.com)
 - [Doppler](https://www.dopplerstatus.com)
 - [GitHub](https://www.githubstatus.com)
 - [GitLab](https://status.gitlab.com)
 - [HashiCorp](https://status.hashicorp.com)
+- [Inngest](https://status.inngest.com)
+- [JFrog](https://status.jfrog.io)
 - [LaunchDarkly](https://status.launchdarkly.com)
 - [n8n](https://n8n.statuspage.io)
 - [ngrok](https://status.ngrok.com)
 - [npm](https://status.npmjs.org)
+- [Ona](https://onastatus.com)
 - [Packagist](https://status.packagist.org)
+- [Postman](https://status.postman.com)
 - [Python Infrastructure](https://status.python.org)
+- [RubyGems](https://status.rubygems.org)
+- [Semaphore](https://status.semaphore.io)
 - [Temporal](https://status.temporal.io)
 - [Travis CI](https://www.traviscistatus.com)
 - [Zapier](https://status.zapier.com)
 
 ### Cloud & Infrastructure
 - [Ably](https://status.ably.com)
+- [Akamai Linode](https://status.linode.com)
 - [AWS](https://health.aws.com/health/status) *(beta)*
+- [Bunny.net](https://status.bunny.net)
 - [Clever Cloud](https://www.clevercloudstatus.com) *(beta)*
 - [Cloudflare](https://www.cloudflarestatus.com)
 - [DigitalOcean](https://status.digitalocean.com)
@@ -77,18 +95,28 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Fly.io](https://status.flyio.net)
 - [Google Cloud](https://status.cloud.google.com)
 - [Heroku](https://status.heroku.com)
+- [imgix](https://status.imgix.com)
 - [Kong](https://kong.statuspage.io)
+- [Lambda](https://status.lambda.ai)
 - [Netlify](https://netlifystatus.com)
 - [Render](https://status.render.com)
+- [Scaleway](https://status.scaleway.com)
+- [Uploadcare](https://status.uploadcare.com)
 - [Vercel](https://www.vercel-status.com)
 
 ### CMS & Content
 - [Contentful](https://www.contentfulstatus.com)
 - [Sanity](https://www.sanity-status.com)
+- [Squarespace](https://status.squarespace.com)
+- [Vimeo](https://www.vimeostatus.com)
+- [Webflow](https://status.webflow.com)
+- [Wistia](https://status.wistia.com)
 
 ### Collaboration & Productivity
 - [Airtable](https://status.airtable.com)
+- [Asana](https://status.asana.com)
 - [Atlassian](https://status.atlassian.com)
+- [Box](https://status.box.com)
 - [Dashdoc](https://www.dashdocstatus.com)
 - [Dropbox](https://status.dropbox.com)
 - [Figma](https://status.figma.com)
@@ -97,24 +125,40 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Liveblocks](https://liveblocks.statuspage.io)
 - [Loom](https://loom.status.atlassian.com)
 - [Miro](https://status.miro.com)
+- [monday.com](https://status.monday.com)
 - [Notion](https://www.notion-status.com)
 - [Retool](https://status.retool.com)
+- [Smartsheet](https://status.smartsheet.com)
+- [Trello](https://trello.status.atlassian.com)
 
 ### Communication
 - [Courier](https://status.courier.com)
+- [Daily](https://status.daily.co)
 - [Discord](https://discordstatus.com)
-- [Intercom](https://www.intercomstatus.com)
+- [Intercom](https://www.finstatus.com)
+- [Knock](https://status.knock.app)
+- [LiveKit](https://status.livekit.io)
 - [Mastodon Social](https://status.mastodon.social)
+- [PubNub](https://status.pubnub.com)
+- [Pusher](https://status.pusher.com)
 - [Signal](https://status.signal.org) *(beta)*
+- [Sinch](https://status.sinch.com)
 - [Slack](https://slack-status.com)
 - [Twilio](https://status.twilio.com)
 - [Zoom](https://status.zoom.us)
 
 ### Databases & Storage
+- [Aiven](https://status.aiven.io)
+- [ClickHouse](https://status.clickhouse.com)
 - [Cloudinary](https://status.cloudinary.com)
+- [CockroachDB](https://status.cockroachlabs.cloud)
+- [Convex](https://status.convex.dev)
 - [Hasura](https://hasura-status.com)
+- [InfluxDB](https://status.influxdata.com)
 - [MongoDB Atlas](https://status.mongodb.com)
+- [Neo4j Aura](https://status.neo4j.io)
 - [Neon](https://neonstatus.com)
+- [Nhost](https://status.nhost.io)
 - [Pinecone](https://status.pinecone.io)
 - [PlanetScale](https://www.planetscalestatus.com)
 - [Prisma](https://prisma.statuspage.io)
@@ -122,6 +166,8 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Upstash](https://status.upstash.com)
 
 ### Email
+- [Brevo](https://status.brevo.com)
+- [Klaviyo](https://status.klaviyo.com)
 - [Mailgun](https://status.mailgun.com)
 - [Postmark](https://status.postmarkapp.com)
 - [Resend](https://resend-status.com)
@@ -138,8 +184,11 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Clerk](https://status.clerk.com)
 - [Dashlane](https://status.dashlane.com)
 - [Doppler](https://www.dopplerstatus.com)
+- [Frontegg](https://status.frontegg.com)
+- [FusionAuth](https://status.fusionauth.io)
 - [Let's Encrypt](https://letsencrypt.status.io)
 - [Proton](https://status.proton.me)
+- [Snyk](https://status.snyk.io)
 - [Stytch](https://status.stytch.com)
 - [Tailscale](https://status.tailscale.com)
 - [WorkOS](https://status.workos.com)
@@ -150,6 +199,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 
 ### Monitoring & Observability
 - [Axiom](https://axiomdev.statuspage.io)
+- [BugSnag](https://bugsnag.status.smartbear.com)
 - [Datadog](https://status.datadoghq.com)
 - [Grafana](https://status.grafana.com)
 - [Honeycomb](https://status.honeycomb.io)
@@ -157,11 +207,16 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [PagerDuty](https://status.pagerduty.com)
 - [Rollbar](https://status.rollbar.com)
 - [Sentry](https://status.sentry.io)
+- [Sumo Logic](https://status.sumologic.com)
 
 ### Payments & Commerce
+- [BigCommerce](https://status.bigcommerce.com)
 - [Brex](https://status.brex.com)
+- [Chargebee](https://status.chargebee.com)
 - [HubSpot](https://status.hubspot.com)
+- [Mollie](https://status.mollie.com)
 - [Plaid](https://status.plaid.com)
+- [Recurly](https://status.recurly.com)
 - [Shopify](https://www.shopifystatus.com)
 - [Stripe](https://status.stripe.com)
 
@@ -443,12 +498,12 @@ Sorted by number of services using each integration.
 
 | Type | # | Used by |
 |---|---|---|
-| `statuspage` | 81 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
+| `statuspage` | 133 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
 | `incidentio` | 11 | OpenAI, Miro, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Tinybird, Zapier, Intercom |
+| `instatus` | 7 | Airbyte, Mastodon Social, Deno, Stytch, Mollie, Nhost, Wistia |
 | `statusio` | 5 | Docker, GitLab, Neon, Dashlane, Let's Encrypt |
 | `site24x7` | 3 | ConfigCat, ManageEngine, Zoho |
 | `google` | 2 | Google Workspace, Google Cloud |
-| `instatus` | 4 | Airbyte, Mastodon Social, Deno, Stytch |
 | `algolia` | 1 | Algolia |
 | `auth0` | 1 | Auth0 |
 | `awshealth` | 1 | AWS *(beta)* |
