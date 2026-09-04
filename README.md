@@ -264,8 +264,19 @@ Check the status page URL and try `<url>/api/v2/status.json`. Common patterns:
 | `{ status: { indicator }, components }` at `/api/v2` | `statuspage` or `incidentio` |
 | `{ page: { state } }` at `/api/v1/status` | `sorryapp` |
 | `api.status.io/1.0/status/{pageId}` | `statusio` (requires `pageId` field) |
-| `{pageUrl}/sp/api/u/summary_details` | `site24x7` |
+| `{statusPageUrl}/sp/api/u/summary_details` | `site24x7` |
 | Custom shape | Write a new fetcher — see below |
+
+Then check the page is still maintained. An abandoned Statuspage instance answers
+every endpoint correctly and reports "All Systems Operational" forever, which is
+worse than an error: `docusign.statuspage.io` has been frozen since 2021 and
+`intercomstatus.statuspage.io` since 2020. Component timestamps are not the
+signal, since a component that has not changed status in a year is normal. Look
+at the most recent entry in `/api/v2/incidents.json` instead.
+
+Beware of redirects too. A status page that moved may redirect its root while
+sending `/api/v2/*.json` to the new site's HTML: probe the URL you intend to
+store, not the one you started from.
 
 #### 2. Add an entry to `proxy/catalog.js`
 
@@ -277,8 +288,8 @@ const CATALOG = {
   'myservice': {
     name: 'My Service',
     type: 'statuspage',
-    pageUrl: 'https://status.myservice.com',
-    apiBase: 'https://status.myservice.com/api/v2',
+    websiteUrl: 'https://myservice.com',
+    statusPageUrl: 'https://status.myservice.com',
     relatedDomains: ['myservice.com', '*.myservice.com'],
     searchAliases: ['keyword', 'another name'],
   },
@@ -290,11 +301,12 @@ const CATALOG = {
 |---|---|---|
 | `name` | ✓ | Display name |
 | `type` | ✓ | Platform type (see full list in `proxy/catalog.js` header) |
-| `pageUrl` | ✓ | Human-readable status page URL |
-| `apiBase` | ✓ | API base URL used by the fetcher |
+| `websiteUrl` | ✓ | The service's own site |
+| `statusPageUrl` | ✓ | Status page URL. Fetchers derive their endpoints from it, so it is both the link shown in the UI and the API base. |
 | `relatedDomains` | | Domains that trigger the "add service" suggestion. `*.` prefix matches all subdomains. |
 | `searchAliases` | | Extra search keywords (product names, acronyms) |
 | `pageId` | `statusio` only | status.io page identifier |
+| `slug` | `checkly` only | Checkly status page slug |
 | `beta` | | Shows a "beta" badge in the UI |
 
 #### 3. Validate and test
