@@ -280,6 +280,32 @@ test('fetchStatuspageStatus: throws on non-2xx status endpoint', async () => {
   await assert.rejects(() => fetchStatuspageStatus(STATUSPAGE_SERVICE), /Status API returned 503/);
 });
 
+test('fetchStatuspageStatus: a non-2xx body is described, so a WAF block is recognisable', async () => {
+  // Fastly's StatusCast page intermittently answers 403 from GitHub runner IPs.
+  // `returned 403` alone cannot distinguish a WAF challenge from the
+  // application refusing; the body is what tells them apart.
+  mockFetch({
+    'https://sp.example.com/api/v2/status.json': {
+      status: 403,
+      body: '<html><head><title>Access denied</title></head><body>Attention Required! Cloudflare</body></html>',
+      contentType: 'text/html',
+    },
+    'https://sp.example.com/api/v2/components.json': { body: { components: [] } },
+    'https://sp.example.com/api/v2/incidents/unresolved.json': { body: { incidents: [] } },
+  });
+
+  await assert.rejects(
+    () => fetchStatuspageStatus(STATUSPAGE_SERVICE),
+    (err) => {
+      assert.match(err.message, /Status API returned 403/);
+      assert.match(err.message, /api\/v2\/status\.json/);
+      assert.match(err.message, /content-type=text\/html/);
+      assert.match(err.message, /Cloudflare/);
+      return true;
+    },
+  );
+});
+
 // ─── fetchIncidentioStatus ────────────────────────────────────────────────────
 
 test('fetchIncidentioStatus: resolved incidents are filtered out', async () => {

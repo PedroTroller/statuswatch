@@ -3,7 +3,7 @@
 const { Incident }  = require('../../common/value-objects/incident.js');
 const { ComponentStatus } = require('../../common/value-objects/component-status.js');
 const { ServiceStatus }   = require('../../common/value-objects/service-status.js');
-const { safeJson, _distributeIncidents } = require('./_helpers.js');
+const { safeJson, _describeResponse, _distributeIncidents } = require('./_helpers.js');
 
 // StatusCast: platform used by e.g. Fastly. Three JSON endpoints at the page root:
 //   /status.json      — overall status: { Status, StatusText, … }
@@ -30,8 +30,14 @@ async function fetchStatuscastStatus(service) {
     fetch(`${service.statusPageUrl}/incidents.json`,  { headers }).catch(() => null),
   ]);
 
-  if (!statusRes.ok)     throw new Error(`Status API returned ${statusRes.status}`);
-  if (!componentsRes.ok) throw new Error(`Components API returned ${componentsRes.status}`);
+  // StatusCast sits behind a WAF that intermittently answers 403 from GitHub
+  // runner IPs even with the browser UA above, so say what came back.
+  if (!statusRes.ok) {
+    throw new Error(`Status API returned ${statusRes.status} for ${service.statusPageUrl}/status.json (${await _describeResponse(statusRes)})`);
+  }
+  if (!componentsRes.ok) {
+    throw new Error(`Components API returned ${componentsRes.status} for ${service.statusPageUrl}/components.json (${await _describeResponse(componentsRes)})`);
+  }
 
   const statusData     = await safeJson(statusRes);
   const componentsData = await safeJson(componentsRes);

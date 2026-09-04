@@ -25,6 +25,19 @@ function _describeBody({ text, contentType }) {
   return `content-type=${contentType}, ${text.length} bytes, body=${excerpt || '(empty)'}`;
 }
 
+// Describes a non-2xx response for an error message. A 403 from a WAF and a 403
+// from the application look identical without the body: the challenge page is
+// what tells them apart.
+async function _describeResponse(res) {
+  try {
+    const text        = await res.text();
+    const contentType = res.headers.get('content-type') ?? 'unknown';
+    return _describeBody({ text, contentType });
+  } catch {
+    return 'body unavailable';
+  }
+}
+
 // Maps an old-style indicator string to a component-status string.
 // Used by fetchers that compute an overall indicator before building components
 // (e.g. to create a synthetic component when no component list is available).
@@ -59,4 +72,4 @@ function _distributeIncidents(components, incidents, fallbackStatus = 'degraded_
   );
 }
 
-module.exports = { safeJson, jsonWithBody, _describeBody, _indicatorToStatus, _distributeIncidents };
+module.exports = { safeJson, jsonWithBody, _describeBody, _describeResponse, _indicatorToStatus, _distributeIncidents };

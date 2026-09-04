@@ -3,7 +3,7 @@
 const { Incident }                    = require('../../common/value-objects/incident.js');
 const { ComponentStatus, COMPONENT_STATUSES } = require('../../common/value-objects/component-status.js');
 const { ServiceStatus }                     = require('../../common/value-objects/service-status.js');
-const { safeJson, jsonWithBody, _describeBody, _indicatorToStatus, _distributeIncidents } = require('./_helpers.js');
+const { safeJson, jsonWithBody, _describeBody, _describeResponse, _indicatorToStatus, _distributeIncidents } = require('./_helpers.js');
 
 // Maps platform-specific status strings not in our enum to the closest equivalent.
 const COMPONENT_STATUS_ALIASES = {
@@ -38,7 +38,9 @@ async function fetchStatuspageStatus(service) {
     fetch(`${service.statusPageUrl}/api/v2/incidents/unresolved.json`),
   ]);
 
-  if (!statusRes.ok) throw new Error(`Status API returned ${statusRes.status} for ${statusUrl}`);
+  if (!statusRes.ok) {
+    throw new Error(`Status API returned ${statusRes.status} for ${statusUrl} (${await _describeResponse(statusRes)})`);
+  }
 
   const status = await jsonWithBody(statusRes);
 
@@ -90,7 +92,9 @@ async function fetchIncidentioStatus(service) {
     fetch(`${service.statusPageUrl}/api/v2/incidents.json`).catch(() => null),
   ]);
 
-  if (!statusRes.ok) throw new Error(`Status API returned ${statusRes.status} for ${statusUrl}`);
+  if (!statusRes.ok) {
+    throw new Error(`Status API returned ${statusRes.status} for ${statusUrl} (${await _describeResponse(statusRes)})`);
+  }
 
   const status = await jsonWithBody(statusRes);
 
