@@ -33,6 +33,7 @@ const {
   fetchStripeStatus,
   fetchSorryappStatus,
   fetchAwsHealthStatus,
+  fetchInstatusStatus,
 } = require('../proxy/fetchers');
 
 // ─── Test runner ──────────────────────────────────────────────────────────────
@@ -304,6 +305,63 @@ test('fetchStatuspageStatus: a non-2xx body is described, so a WAF block is reco
       return true;
     },
   );
+});
+
+// ─── fetchInstatusStatus ──────────────────────────────────────────────────────
+
+const INSTATUS_SERVICE = {
+  id: 'ins', name: 'Ins', statusPageUrl: 'https://ins.example.com',
+  relatedDomains: [], searchAliases: [],
+};
+
+test('fetchInstatusStatus: nested components are flattened to their leaves', async () => {
+  // Instatus groups components under parents. Reading only the top level drops
+  // every nested child: Airbyte exposes 85 leaves and the flat read saw 9.
+  mockFetch({
+    'https://ins.example.com/api/v2/summary.json':    { body: { page: { status: 'UP' } } },
+    'https://ins.example.com/api/v2/components.json': { body: { components: [
+      { id: 'top', name: 'Platform', status: 'OPERATIONAL', isParent: true, children: [
+        { id: 'g1', name: 'Group', status: 'OPERATIONAL', isParent: true, children: [
+          { id: 'leaf1', name: 'API',  status: 'MAJOROUTAGE', isParent: false },
+          { id: 'leaf2', name: 'PSD2', status: 'OPERATIONAL', isParent: false },
+        ]},
+        { id: 'leaf3', name: 'Webhook', status: 'OPERATIONAL', isParent: false },
+      ]},
+      { id: 'leaf4', name: 'Website', status: 'OPERATIONAL', isParent: false },
+    ]}},
+  });
+
+  const result = await fetchInstatusStatus(INSTATUS_SERVICE);
+  assert.equal(result.components.length, 4);
+  assert.deepEqual(result.components.map(c => c.id).sort(), ['leaf1', 'leaf2', 'leaf3', 'leaf4']);
+  // The outage lives two levels down; the flat read would have missed it.
+  assert.strictEqual(result.status, StatusEnum.MAJOR_OUTAGE);
+});
+
+test('fetchInstatusStatus: a page exposing only groups falls back to the page status', async () => {
+  mockFetch({
+    'https://ins.example.com/api/v2/summary.json':    { body: { page: { status: 'HASISSUES' } } },
+    'https://ins.example.com/api/v2/components.json': { body: { components: [] } },
+  });
+
+  const result = await fetchInstatusStatus(INSTATUS_SERVICE);
+  assert.equal(result.components.length, 1);
+  assert.equal(result.components[0].id, 'service');
+  assert.strictEqual(result.status, StatusEnum.DEGRADED_PERFORMANCE);
+});
+
+test('fetchInstatusStatus: a flat component list is unchanged', async () => {
+  mockFetch({
+    'https://ins.example.com/api/v2/summary.json':    { body: { page: { status: 'UP' } } },
+    'https://ins.example.com/api/v2/components.json': { body: { components: [
+      { id: 'a', name: 'A', status: 'OPERATIONAL',         isParent: false },
+      { id: 'b', name: 'B', status: 'DEGRADEDPERFORMANCE', isParent: false },
+    ]}},
+  });
+
+  const result = await fetchInstatusStatus(INSTATUS_SERVICE);
+  assert.equal(result.components.length, 2);
+  assert.strictEqual(result.status, StatusEnum.DEGRADED_PERFORMANCE);
 });
 
 // ─── fetchIncidentioStatus ────────────────────────────────────────────────────
