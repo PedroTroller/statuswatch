@@ -336,12 +336,14 @@ const CATALOG = {
     relatedDomains: ['cockroachlabs.com', '*.cockroachlabs.com'],
     searchAliases: ['database', 'distributed sql', 'postgres'],
   },
+  // relatedDomains[0] is the favicon lookup key: the CDN has no icon for
+  // codecov.io or codecov.com, only for the landing host they redirect to.
   'codecov': {
     name: 'Codecov',
     type: 'statuspage',
     websiteUrl: 'https://codecov.io',
     statusPageUrl: 'https://status.codecov.com',
-    relatedDomains: ['codecov.io', '*.codecov.io', 'codecov.com', '*.codecov.com'],
+    relatedDomains: ['about.codecov.io', 'codecov.io', '*.codecov.io', 'codecov.com', '*.codecov.com'],
     searchAliases: ['coverage', 'testing', 'ci'],
   },
   'cohere': {
@@ -1007,7 +1009,7 @@ const CATALOG = {
     type: 'statuspage',
     websiteUrl: 'https://gitpod.io',
     statusPageUrl: 'https://onastatus.com',
-    relatedDomains: ['gitpod.io', '*.gitpod.io', 'ona.com', '*.ona.com'],
+    relatedDomains: ['ona.com', '*.ona.com', 'gitpod.io', '*.gitpod.io'],
     searchAliases: ['gitpod', 'cloud ide', 'dev environment', 'workspace'],
   },
   'openai': {
