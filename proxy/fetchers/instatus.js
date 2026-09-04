@@ -62,12 +62,21 @@ async function fetchInstatusStatus(service) {
 
   // A page with no leaf component would otherwise be reported operational
   // whatever it says, since the status below is the worst of an empty list.
+  // Fall back to the page-level status, but only when the page actually
+  // reports one: an empty shell answering `{"page":null,"status":null}` is not
+  // a status page, and must be rejected rather than pinned to a made-up value.
   if (components.length === 0) {
     const pageStatus = summaryData?.page?.status;
+    if (!PAGE_STATUS_MAP[pageStatus]) {
+      throw new Error(
+        `Invalid Instatus response from ${service.statusPageUrl}: ` +
+        `no components and no usable page status (got ${JSON.stringify(pageStatus)})`
+      );
+    }
     components.push(new ComponentStatus({
       id:     'service',
       name:   'Service',
-      status: PAGE_STATUS_MAP[pageStatus] ?? 'degraded_performance',
+      status: PAGE_STATUS_MAP[pageStatus],
     }));
   }
 

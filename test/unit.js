@@ -350,6 +350,21 @@ test('fetchInstatusStatus: a page exposing only groups falls back to the page st
   assert.strictEqual(result.status, StatusEnum.DEGRADED_PERFORMANCE);
 });
 
+test('fetchInstatusStatus: an empty shell is rejected, not pinned to a made-up status', async () => {
+  // status.smith.langchain.com answers {"page":null,"status":null,"components":[]}.
+  // Accepting that would publish a permanent degraded_performance for a page
+  // that reports nothing at all.
+  mockFetch({
+    'https://ins.example.com/api/v2/summary.json':    { body: { page: null, status: null, components: [] } },
+    'https://ins.example.com/api/v2/components.json': { body: { components: [] } },
+  });
+
+  await assert.rejects(
+    () => fetchInstatusStatus(INSTATUS_SERVICE),
+    /no components and no usable page status/,
+  );
+});
+
 test('fetchInstatusStatus: a flat component list is unchanged', async () => {
   mockFetch({
     'https://ins.example.com/api/v2/summary.json':    { body: { page: { status: 'UP' } } },
