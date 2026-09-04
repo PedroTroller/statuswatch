@@ -48,6 +48,14 @@
 // Intentionally excluded from wildcards: user-content hosts such as
 //   *.github.io, *.vercel.app, *.netlify.app, *.myshopify.com, *.onrender.com
 const CATALOG = {
+  '100ms': {
+    name: '100ms',
+    type: 'statuspage',
+    websiteUrl: 'https://100ms.live',
+    statusPageUrl: 'https://status.100ms.live',
+    relatedDomains: ['100ms.live', '*.100ms.live'],
+    searchAliases: ['video', 'webrtc', 'live'],
+  },
   '1password': {
     name: '1Password',
     type: 'statuspage',
@@ -167,6 +175,14 @@ const CATALOG = {
     relatedDomains: ['axiom.co', '*.axiom.co'],
     searchAliases: ['logs', 'log analytics', 'observability', 'tracing', 'events', 'monitoring'],
   },
+  'bandwidth': {
+    name: 'Bandwidth',
+    type: 'statuspage',
+    websiteUrl: 'https://bandwidth.com',
+    statusPageUrl: 'https://status.bandwidth.com',
+    relatedDomains: ['bandwidth.com', '*.bandwidth.com'],
+    searchAliases: ['sms', 'voice', 'telephony'],
+  },
   'bigcommerce': {
     name: 'BigCommerce',
     type: 'statuspage',
@@ -206,6 +222,22 @@ const CATALOG = {
     statusPageUrl: 'https://status.box.com',
     relatedDomains: ['box.com', '*.box.com'],
     searchAliases: ['storage', 'files', 'cloud storage'],
+  },
+  'braintrust': {
+    name: 'Braintrust',
+    type: 'statuspage',
+    websiteUrl: 'https://braintrust.dev',
+    statusPageUrl: 'https://status.braintrust.dev',
+    relatedDomains: ['braintrust.dev', '*.braintrust.dev'],
+    searchAliases: ['llm evals', 'observability', 'ai'],
+  },
+  'braze': {
+    name: 'Braze',
+    type: 'statuspage',
+    websiteUrl: 'https://braze.com',
+    statusPageUrl: 'https://status.braze.com',
+    relatedDomains: ['braze.com', '*.braze.com'],
+    searchAliases: ['customer engagement', 'messaging', 'crm'],
   },
   'brevo': {
     name: 'Brevo',
@@ -362,6 +394,14 @@ const CATALOG = {
     relatedDomains: ['configcat.com', '*.configcat.com'],
     searchAliases: ['feature flags', 'feature toggles', 'feature management', 'a/b testing'],
   },
+  'confluence': {
+    name: 'Confluence',
+    type: 'statuspage',
+    websiteUrl: 'https://atlassian.com/software/confluence',
+    statusPageUrl: 'https://confluence.status.atlassian.com',
+    relatedDomains: ['atlassian.net', '*.atlassian.net', 'confluence.com'],
+    searchAliases: ['wiki', 'docs', 'atlassian'],
+  },
   'confluent': {
     name: 'Confluent',
     type: 'statuspage',
@@ -410,6 +450,14 @@ const CATALOG = {
     relatedDomains: ['cursor.com', '*.cursor.com'],
     searchAliases: ['ide', 'code editor', 'ai coding', 'copilot'],
   },
+  'customerio': {
+    name: 'Customer.io',
+    type: 'statuspage',
+    websiteUrl: 'https://customer.io',
+    statusPageUrl: 'https://customerio.statuspage.io',
+    relatedDomains: ['customer.io', '*.customer.io'],
+    searchAliases: ['email', 'automation', 'messaging'],
+  },
   'daily': {
     name: 'Daily',
     type: 'statuspage',
@@ -442,6 +490,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.datadoghq.com',
     relatedDomains: ['datadoghq.com', '*.datadoghq.com'],
     searchAliases: ['monitoring', 'apm', 'logs', 'observability', 'metrics', 'infrastructure'],
+  },
+  'dbtlabs': {
+    name: 'dbt Labs',
+    type: 'statuspage',
+    websiteUrl: 'https://getdbt.com',
+    statusPageUrl: 'https://status.getdbt.com',
+    relatedDomains: ['getdbt.com', '*.getdbt.com', 'dbtlabs.com', '*.dbtlabs.com'],
+    searchAliases: ['analytics engineering', 'transform', 'elt'],
   },
   'deno': {
     name: 'Deno',
@@ -572,6 +628,14 @@ const CATALOG = {
     relatedDomains: ['fly.io', '*.fly.io'],
     searchAliases: ['hosting', 'deployment', 'containers', 'paas'],
   },
+  'front': {
+    name: 'Front',
+    type: 'statuspage',
+    websiteUrl: 'https://front.com',
+    statusPageUrl: 'https://front.statuspage.io',
+    relatedDomains: ['front.com', '*.front.com', 'frontapp.com', '*.frontapp.com'],
+    searchAliases: ['shared inbox', 'support', 'email'],
+  },
   'frontegg': {
     name: 'Frontegg',
     type: 'statuspage',
@@ -669,6 +733,14 @@ const CATALOG = {
     relatedDomains: ['hasura.io', '*.hasura.io'],
     searchAliases: ['graphql', 'database', 'api', 'postgres'],
   },
+  'helpscout': {
+    name: 'Help Scout',
+    type: 'statuspage',
+    websiteUrl: 'https://helpscout.com',
+    statusPageUrl: 'https://status.helpscout.com',
+    relatedDomains: ['helpscout.com', '*.helpscout.com', 'helpscout.net', '*.helpscout.net'],
+    searchAliases: ['helpdesk', 'support', 'shared inbox'],
+  },
   'heroku': {
     name: 'Heroku',
     type: 'heroku',
@@ -676,6 +748,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.heroku.com',
     relatedDomains: ['heroku.com', '*.heroku.com', 'herokuapp.com'],
     searchAliases: ['paas', 'hosting', 'deployment', 'dyno', 'salesforce'],
+  },
+  'honeybadger': {
+    name: 'Honeybadger',
+    type: 'statuspage',
+    websiteUrl: 'https://honeybadger.io',
+    statusPageUrl: 'https://status.honeybadger.io',
+    relatedDomains: ['honeybadger.io', '*.honeybadger.io'],
+    searchAliases: ['error tracking', 'monitoring', 'uptime'],
   },
   'honeycomb': {
     name: 'Honeycomb',
@@ -737,6 +817,14 @@ const CATALOG = {
     relatedDomains: ['intercom.com', '*.intercom.com', 'intercom.io', '*.intercom.io'],
     searchAliases: ['customer support', 'chat', 'messaging', 'helpdesk', 'live chat'],
   },
+  'iterable': {
+    name: 'Iterable',
+    type: 'statuspage',
+    websiteUrl: 'https://iterable.com',
+    statusPageUrl: 'https://status.iterable.com',
+    relatedDomains: ['iterable.com', '*.iterable.com'],
+    searchAliases: ['marketing automation', 'messaging'],
+  },
   'jfrog': {
     name: 'JFrog',
     type: 'statuspage',
@@ -744,6 +832,22 @@ const CATALOG = {
     statusPageUrl: 'https://status.jfrog.io',
     relatedDomains: ['jfrog.com', '*.jfrog.com'],
     searchAliases: ['artifactory', 'registry', 'artifacts'],
+  },
+  'jira': {
+    name: 'Jira',
+    type: 'statuspage',
+    websiteUrl: 'https://atlassian.com/software/jira',
+    statusPageUrl: 'https://jira-software.status.atlassian.com',
+    relatedDomains: ['atlassian.net', '*.atlassian.net', 'jira.com', '*.jira.com'],
+    searchAliases: ['issue tracker', 'agile', 'tickets', 'atlassian'],
+  },
+  'kinde': {
+    name: 'Kinde',
+    type: 'instatus',
+    websiteUrl: 'https://kinde.com',
+    statusPageUrl: 'https://status.kinde.com',
+    relatedDomains: ['kinde.com', '*.kinde.com'],
+    searchAliases: ['auth', 'identity', 'user management'],
   },
   'klaviyo': {
     name: 'Klaviyo',
@@ -768,6 +872,14 @@ const CATALOG = {
     statusPageUrl: 'https://kong.statuspage.io',
     relatedDomains: ['konghq.com', '*.konghq.com'],
     searchAliases: ['api gateway', 'api management', 'service mesh', 'proxy', 'plugins'],
+  },
+  'koyeb': {
+    name: 'Koyeb',
+    type: 'instatus',
+    websiteUrl: 'https://koyeb.com',
+    statusPageUrl: 'https://status.koyeb.com',
+    relatedDomains: ['koyeb.com', '*.koyeb.com'],
+    searchAliases: ['paas', 'deploy', 'serverless'],
   },
   'lambdalabs': {
     name: 'Lambda',
@@ -825,6 +937,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.livekit.io',
     relatedDomains: ['livekit.io', '*.livekit.io'],
     searchAliases: ['webrtc', 'realtime', 'video', 'agents'],
+  },
+  'logrocket': {
+    name: 'LogRocket',
+    type: 'incidentio',
+    websiteUrl: 'https://logrocket.com',
+    statusPageUrl: 'https://status.logrocket.com',
+    relatedDomains: ['logrocket.com', '*.logrocket.com'],
+    searchAliases: ['session replay', 'frontend monitoring'],
   },
   'loom': {
     name: 'Loom',
@@ -988,6 +1108,14 @@ const CATALOG = {
     relatedDomains: ['nhost.io', '*.nhost.io', 'nhost.run', '*.nhost.run'],
     searchAliases: ['backend', 'baas', 'graphql', 'postgres'],
   },
+  'northflank': {
+    name: 'Northflank',
+    type: 'instatus',
+    websiteUrl: 'https://northflank.com',
+    statusPageUrl: 'https://status.northflank.com',
+    relatedDomains: ['northflank.com', '*.northflank.com'],
+    searchAliases: ['paas', 'deploy', 'kubernetes'],
+  },
   'notion': {
     name: 'Notion',
     type: 'statuspage',
@@ -995,6 +1123,14 @@ const CATALOG = {
     statusPageUrl: 'https://www.notion-status.com',
     relatedDomains: ['notion.so', '*.notion.so', 'notion.com', '*.notion.com'],
     searchAliases: ['notes', 'wiki', 'docs', 'workspace', 'knowledge base', 'database'],
+  },
+  'novu': {
+    name: 'Novu',
+    type: 'instatus',
+    websiteUrl: 'https://novu.co',
+    statusPageUrl: 'https://novu.instatus.com',
+    relatedDomains: ['novu.co', '*.novu.co'],
+    searchAliases: ['notifications', 'messaging', 'in-app'],
   },
   'npm': {
     name: 'npm',
@@ -1012,6 +1148,14 @@ const CATALOG = {
     relatedDomains: ['ona.com', '*.ona.com', 'gitpod.io', '*.gitpod.io'],
     searchAliases: ['gitpod', 'cloud ide', 'dev environment', 'workspace'],
   },
+  'onesignal': {
+    name: 'OneSignal',
+    type: 'statuspage',
+    websiteUrl: 'https://onesignal.com',
+    statusPageUrl: 'https://status.onesignal.com',
+    relatedDomains: ['onesignal.com', '*.onesignal.com'],
+    searchAliases: ['push notifications', 'messaging'],
+  },
   'openai': {
     name: 'OpenAI',
     type: 'incidentio',
@@ -1019,6 +1163,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.openai.com',
     relatedDomains: ['openai.com', '*.openai.com', 'chatgpt.com', '*.chatgpt.com'],
     searchAliases: ['chatgpt', 'gpt', 'gpt-4', 'ai', 'llm', 'dall-e', 'whisper'],
+  },
+  'opsgenie': {
+    name: 'Opsgenie',
+    type: 'incidentio',
+    websiteUrl: 'https://atlassian.com/software/opsgenie',
+    statusPageUrl: 'https://opsgenie.status.atlassian.com',
+    relatedDomains: ['opsgenie.com', '*.opsgenie.com'],
+    searchAliases: ['on-call', 'alerting', 'incident', 'atlassian'],
   },
   'packagist': {
     name: 'Packagist',
@@ -1044,6 +1196,14 @@ const CATALOG = {
     relatedDomains: ['pandadoc.com', '*.pandadoc.com'],
     searchAliases: ['e-signature', 'esign', 'proposals', 'contracts', 'documents'],
   },
+  'perplexity': {
+    name: 'Perplexity',
+    type: 'instatus',
+    websiteUrl: 'https://perplexity.ai',
+    statusPageUrl: 'https://status.perplexity.com',
+    relatedDomains: ['perplexity.ai', '*.perplexity.ai'],
+    searchAliases: ['ai search', 'llm', 'answers'],
+  },
   'pinecone': {
     name: 'Pinecone',
     type: 'statuspage',
@@ -1067,6 +1227,14 @@ const CATALOG = {
     statusPageUrl: 'https://www.planetscalestatus.com',
     relatedDomains: ['planetscale.com', '*.planetscale.com'],
     searchAliases: ['mysql', 'database', 'serverless db', 'vitess'],
+  },
+  'plivo': {
+    name: 'Plivo',
+    type: 'statuspage',
+    websiteUrl: 'https://plivo.com',
+    statusPageUrl: 'https://status.plivo.com',
+    relatedDomains: ['plivo.com', '*.plivo.com'],
+    searchAliases: ['sms', 'voice', 'communications'],
   },
   'posthog': {
     name: 'PostHog',
@@ -1100,6 +1268,14 @@ const CATALOG = {
     relatedDomains: ['prisma.io', '*.prisma.io'],
     searchAliases: ['orm', 'database', 'typescript', 'postgres', 'mysql', 'mongodb', 'query builder'],
   },
+  'prismic': {
+    name: 'Prismic',
+    type: 'statuspage',
+    websiteUrl: 'https://prismic.io',
+    statusPageUrl: 'https://status.prismic.io',
+    relatedDomains: ['prismic.io', '*.prismic.io'],
+    searchAliases: ['cms', 'headless', 'content'],
+  },
   'proton': {
     name: 'Proton',
     type: 'statuspage',
@@ -1115,6 +1291,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.pubnub.com',
     relatedDomains: ['pubnub.com', '*.pubnub.com'],
     searchAliases: ['realtime', 'websocket', 'pubsub', 'messaging'],
+  },
+  'pulumi': {
+    name: 'Pulumi',
+    type: 'statuspage',
+    websiteUrl: 'https://pulumi.com',
+    statusPageUrl: 'https://status.pulumi.com',
+    relatedDomains: ['pulumi.com', '*.pulumi.com'],
+    searchAliases: ['iac', 'infrastructure as code', 'terraform'],
   },
   'pusher': {
     name: 'Pusher',
@@ -1140,6 +1324,14 @@ const CATALOG = {
     relatedDomains: ['quicknode.com', '*.quicknode.com'],
     searchAliases: ['web3', 'blockchain', 'ethereum', 'solana', 'rpc', 'node', 'infrastructure'],
   },
+  'railway': {
+    name: 'Railway',
+    type: 'instatus',
+    websiteUrl: 'https://railway.com',
+    statusPageUrl: 'https://railway.instatus.com',
+    relatedDomains: ['railway.com', '*.railway.com', 'railway.app', '*.railway.app'],
+    searchAliases: ['paas', 'deploy', 'hosting'],
+  },
   'recurly': {
     name: 'Recurly',
     type: 'statuspage',
@@ -1147,6 +1339,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.recurly.com',
     relatedDomains: ['recurly.com', '*.recurly.com'],
     searchAliases: ['billing', 'subscriptions'],
+  },
+  'redhat': {
+    name: 'Red Hat',
+    type: 'statuspage',
+    websiteUrl: 'https://redhat.com',
+    statusPageUrl: 'https://status.redhat.com',
+    relatedDomains: ['redhat.com', '*.redhat.com', 'quay.io', '*.quay.io', 'openshift.com', '*.openshift.com'],
+    searchAliases: ['openshift', 'quay', 'ansible', 'rhel', 'linux', 'container registry'],
   },
   'replicate': {
     name: 'Replicate',
@@ -1195,6 +1395,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.rubygems.org',
     relatedDomains: ['rubygems.org', '*.rubygems.org'],
     searchAliases: ['ruby', 'packages', 'registry', 'gems'],
+  },
+  'rudderstack': {
+    name: 'RudderStack',
+    type: 'statuspage',
+    websiteUrl: 'https://rudderstack.com',
+    statusPageUrl: 'https://status.rudderstack.com',
+    relatedDomains: ['rudderstack.com', '*.rudderstack.com'],
+    searchAliases: ['cdp', 'events', 'analytics'],
   },
   'sanity': {
     name: 'Sanity',
@@ -1317,6 +1525,14 @@ const CATALOG = {
     relatedDomains: ['squarespace.com', '*.squarespace.com'],
     searchAliases: ['website builder', 'cms', 'ecommerce'],
   },
+  'statuspage': {
+    name: 'Statuspage',
+    type: 'statuspage',
+    websiteUrl: 'https://atlassian.com/software/statuspage',
+    statusPageUrl: 'https://metastatuspage.com',
+    relatedDomains: ['statuspage.io', '*.statuspage.io'],
+    searchAliases: ['status page', 'incident communication', 'atlassian'],
+  },
   'stripe': {
     name: 'Stripe',
     type: 'stripe',
@@ -1356,6 +1572,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.tailscale.com',
     relatedDomains: ['tailscale.com', '*.tailscale.com'],
     searchAliases: ['vpn', 'networking', 'wireguard', 'mesh network', 'zero trust'],
+  },
+  'telnyx': {
+    name: 'Telnyx',
+    type: 'statuspage',
+    websiteUrl: 'https://telnyx.com',
+    statusPageUrl: 'https://status.telnyx.com',
+    relatedDomains: ['telnyx.com', '*.telnyx.com'],
+    searchAliases: ['sms', 'voice', 'communications'],
   },
   'temporal': {
     name: 'Temporal',
@@ -1397,6 +1621,14 @@ const CATALOG = {
     relatedDomains: ['twilio.com', '*.twilio.com'],
     searchAliases: ['sms', 'voice', 'messaging', 'phone', 'sendgrid', 'whatsapp', 'video'],
   },
+  'typeform': {
+    name: 'Typeform',
+    type: 'statuspage',
+    websiteUrl: 'https://typeform.com',
+    statusPageUrl: 'https://status.typeform.com',
+    relatedDomains: ['typeform.com', '*.typeform.com'],
+    searchAliases: ['forms', 'surveys', 'questionnaire'],
+  },
   'uploadcare': {
     name: 'Uploadcare',
     type: 'statuspage',
@@ -1437,6 +1669,14 @@ const CATALOG = {
     relatedDomains: ['webflow.com', '*.webflow.com'],
     searchAliases: ['cms', 'website builder', 'no-code'],
   },
+  'whereby': {
+    name: 'Whereby',
+    type: 'instatus',
+    websiteUrl: 'https://whereby.com',
+    statusPageUrl: 'https://whereby.instatus.com',
+    relatedDomains: ['whereby.com', '*.whereby.com'],
+    searchAliases: ['video', 'meetings', 'webrtc'],
+  },
   'wistia': {
     name: 'Wistia',
     type: 'instatus',
@@ -1476,6 +1716,14 @@ const CATALOG = {
     statusPageUrl: 'https://status.zendesk.com',
     relatedDomains: ['zendesk.com', '*.zendesk.com', 'zdassets.com'],
     searchAliases: ['customer support', 'helpdesk', 'tickets', 'crm', 'live chat'],
+  },
+  'zilliz': {
+    name: 'Zilliz',
+    type: 'statuspage',
+    websiteUrl: 'https://zilliz.com',
+    statusPageUrl: 'https://status.zilliz.com',
+    relatedDomains: ['zilliz.com', '*.zilliz.com'],
+    searchAliases: ['vector database', 'milvus', 'embeddings'],
   },
   'zoho': {
     name: 'Zoho',

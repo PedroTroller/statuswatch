@@ -21,9 +21,10 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 
 ## Tracked services
 
-177 services across all major categories.
+208 services across all major categories.
 
 ### AI & LLMs
+- [Braintrust](https://status.braintrust.dev)
 - [Browserbase](https://status.browserbase.com)
 - [Claude](https://status.claude.com)
 - [Cohere](https://status.cohere.com)
@@ -33,6 +34,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Groq](https://groqstatus.com)
 - [Mistral AI](https://status.mistral.ai)
 - [OpenAI](https://status.openai.com)
+- [Perplexity](https://status.perplexity.com)
 - [Replicate](https://www.replicatestatus.com)
 
 ### Analytics & Data
@@ -40,10 +42,12 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Algolia](https://status.algolia.com)
 - [Amplitude](https://status.amplitude.com)
 - [Confluent](https://status.confluent.cloud)
+- [dbt Labs](https://status.getdbt.com)
 - [Fivetran](https://status.fivetran.com)
 - [Metabase](https://status.metabase.com)
 - [Mixpanel](https://www.mixpanelstatus.com)
 - [PostHog](https://www.posthogstatus.com)
+- [RudderStack](https://status.rudderstack.com)
 - [Segment](https://status.segment.com)
 - [Snowflake](https://status.snowflake.com)
 - [Tinybird](https://status.tinybird.co)
@@ -74,6 +78,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Ona](https://onastatus.com)
 - [Packagist](https://status.packagist.org)
 - [Postman](https://status.postman.com)
+- [Pulumi](https://status.pulumi.com)
 - [Python Infrastructure](https://status.python.org)
 - [RubyGems](https://status.rubygems.org)
 - [Semaphore](https://status.semaphore.io)
@@ -97,8 +102,12 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Heroku](https://status.heroku.com)
 - [imgix](https://status.imgix.com)
 - [Kong](https://kong.statuspage.io)
+- [Koyeb](https://status.koyeb.com)
 - [Lambda](https://status.lambda.ai)
 - [Netlify](https://netlifystatus.com)
+- [Northflank](https://status.northflank.com)
+- [Railway](https://railway.instatus.com)
+- [Red Hat](https://status.redhat.com)
 - [Render](https://status.render.com)
 - [Scaleway](https://status.scaleway.com)
 - [Uploadcare](https://status.uploadcare.com)
@@ -106,6 +115,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 
 ### CMS & Content
 - [Contentful](https://www.contentfulstatus.com)
+- [Prismic](https://status.prismic.io)
 - [Sanity](https://www.sanity-status.com)
 - [Squarespace](https://status.squarespace.com)
 - [Vimeo](https://www.vimeostatus.com)
@@ -117,10 +127,12 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Asana](https://status.asana.com)
 - [Atlassian](https://status.atlassian.com)
 - [Box](https://status.box.com)
+- [Confluence](https://confluence.status.atlassian.com)
 - [Dashdoc](https://www.dashdocstatus.com)
 - [Dropbox](https://status.dropbox.com)
 - [Figma](https://status.figma.com)
 - [Harvest](https://www.harveststatus.com)
+- [Jira](https://jira-software.status.atlassian.com)
 - [Linear](https://linearstatus.com)
 - [Liveblocks](https://liveblocks.statuspage.io)
 - [Loom](https://loom.status.atlassian.com)
@@ -130,8 +142,11 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Retool](https://status.retool.com)
 - [Smartsheet](https://status.smartsheet.com)
 - [Trello](https://trello.status.atlassian.com)
+- [Typeform](https://status.typeform.com)
 
 ### Communication
+- [100ms](https://status.100ms.live)
+- [Bandwidth](https://status.bandwidth.com)
 - [Courier](https://status.courier.com)
 - [Daily](https://status.daily.co)
 - [Discord](https://discordstatus.com)
@@ -139,12 +154,17 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Knock](https://status.knock.app)
 - [LiveKit](https://status.livekit.io)
 - [Mastodon Social](https://status.mastodon.social)
+- [Novu](https://novu.instatus.com)
+- [OneSignal](https://status.onesignal.com)
+- [Plivo](https://status.plivo.com)
 - [PubNub](https://status.pubnub.com)
 - [Pusher](https://status.pusher.com)
 - [Signal](https://status.signal.org) *(beta)*
 - [Sinch](https://status.sinch.com)
 - [Slack](https://slack-status.com)
+- [Telnyx](https://status.telnyx.com)
 - [Twilio](https://status.twilio.com)
+- [Whereby](https://whereby.instatus.com)
 - [Zoom](https://status.zoom.us)
 
 ### Databases & Storage
@@ -164,9 +184,13 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Prisma](https://prisma.statuspage.io)
 - [Supabase](https://status.supabase.com)
 - [Upstash](https://status.upstash.com)
+- [Zilliz](https://status.zilliz.com)
 
 ### Email
+- [Braze](https://status.braze.com)
 - [Brevo](https://status.brevo.com)
+- [Customer.io](https://customerio.statuspage.io)
+- [Iterable](https://status.iterable.com)
 - [Klaviyo](https://status.klaviyo.com)
 - [Mailgun](https://status.mailgun.com)
 - [Postmark](https://status.postmarkapp.com)
@@ -186,6 +210,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Doppler](https://www.dopplerstatus.com)
 - [Frontegg](https://status.frontegg.com)
 - [FusionAuth](https://status.fusionauth.io)
+- [Kinde](https://status.kinde.com)
 - [Let's Encrypt](https://letsencrypt.status.io)
 - [Proton](https://status.proton.me)
 - [Snyk](https://status.snyk.io)
@@ -202,11 +227,15 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [BugSnag](https://bugsnag.status.smartbear.com)
 - [Datadog](https://status.datadoghq.com)
 - [Grafana](https://status.grafana.com)
+- [Honeybadger](https://status.honeybadger.io)
 - [Honeycomb](https://status.honeycomb.io)
+- [LogRocket](https://status.logrocket.com)
 - [New Relic](https://status.newrelic.com)
+- [Opsgenie](https://opsgenie.status.atlassian.com)
 - [PagerDuty](https://status.pagerduty.com)
 - [Rollbar](https://status.rollbar.com)
 - [Sentry](https://status.sentry.io)
+- [Statuspage](https://metastatuspage.com)
 - [Sumo Logic](https://status.sumologic.com)
 
 ### Payments & Commerce
@@ -221,7 +250,9 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Stripe](https://status.stripe.com)
 
 ### SaaS Suites
+- [Front](https://front.statuspage.io)
 - [Google Workspace](https://www.google.com/appsstatus/dashboard)
+- [Help Scout](https://status.helpscout.com)
 - [ManageEngine](https://status.manageengine.com)
 - [Zendesk](https://status.zendesk.com)
 - [Zoho](https://status.zoho.com)
@@ -510,9 +541,9 @@ Sorted by number of services using each integration.
 
 | Type | # | Used by |
 |---|---|---|
-| `statuspage` | 133 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
-| `incidentio` | 11 | OpenAI, Miro, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Tinybird, Zapier, Intercom |
-| `instatus` | 7 | Airbyte, Mastodon Social, Deno, Stytch, Mollie, Nhost, Wistia |
+| `statuspage` | 155 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
+| `instatus` | 14 | Airbyte, Deno, Stytch, Mollie, Railway, Kinde, Koyeb, Northflank, and others |
+| `incidentio` | 13 | OpenAI, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Intercom, LogRocket, Opsgenie, and others |
 | `statusio` | 5 | Docker, GitLab, Neon, Dashlane, Let's Encrypt |
 | `site24x7` | 3 | ConfigCat, ManageEngine, Zoho |
 | `google` | 2 | Google Workspace, Google Cloud |
