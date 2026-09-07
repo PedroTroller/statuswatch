@@ -1,0 +1,36 @@
+name: Published catalog freshness
+
+# Watches the published site from outside the publishing pipeline.
+#
+# The pipeline once stalled for four weeks: a run stuck on the github-pages
+# environment gate held the `pages` concurrency group, every later dispatch was
+# cancelled while still pending, and no job ran. Nothing inside that workflow
+# could report it, because nothing inside it executed. So this one deliberately
+# shares no concurrency group with it and depends on none of its steps.
+#
+# It also cannot be an HTTP check: catalog.json answered 200 throughout those
+# four weeks while serving data frozen on 6 August. `generatedAt` is the signal.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    name: Published catalog freshness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Check the published catalog is still being refreshed
+        run: node proxy/check-freshness.js
