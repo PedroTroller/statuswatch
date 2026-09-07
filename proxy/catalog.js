@@ -50,9 +50,33 @@
 //
 // Intentionally excluded from wildcards: user-content hosts such as
 //   *.github.io, *.vercel.app, *.netlify.app, *.myshopify.com, *.onrender.com
+// Display order for grouped views, and the closed set `category` may take.
+// Adding a service means picking one of these; adding a category means adding
+// it here first, which is what keeps a typo from silently creating an 18th one.
+const CATEGORIES = [
+  'AI & LLMs',
+  'Analytics & Data',
+  'CI/CD & Developer Tools',
+  'Cloud & Infrastructure',
+  'CMS & Content',
+  'Collaboration & Productivity',
+  'Communication',
+  'Databases & Storage',
+  'Email',
+  'IoT & Smart Home',
+  'Identity & Security',
+  'Mobile & Frontend',
+  'Monitoring & Observability',
+  'Payments & Commerce',
+  'SaaS Suites',
+  'Signing & Compliance',
+  'Web3 & Blockchain',
+];
+
 const CATALOG = {
   '100ms': {
     name: '100ms',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://100ms.live',
     statusPageUrl: 'https://status.100ms.live',
@@ -61,6 +85,7 @@ const CATALOG = {
   },
   '1password': {
     name: '1Password',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://1password.com',
     statusPageUrl: 'https://status.1password.com',
@@ -69,6 +94,7 @@ const CATALOG = {
   },
   'ably': {
     name: 'Ably',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://ably.com',
     statusPageUrl: 'https://status.ably.com',
@@ -77,6 +103,7 @@ const CATALOG = {
   },
   'ai21': {
     name: 'AI21 Labs',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://ai21.com',
     statusPageUrl: 'https://status.ai21.com',
@@ -85,6 +112,7 @@ const CATALOG = {
   },
   'airbyte': {
     name: 'Airbyte',
+    category: 'Analytics & Data',
     type: 'instatus',
     websiteUrl: 'https://airbyte.com',
     statusPageUrl: 'https://status.airbyte.com',
@@ -93,6 +121,7 @@ const CATALOG = {
   },
   'airtable': {
     name: 'Airtable',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://airtable.com',
     statusPageUrl: 'https://status.airtable.com',
@@ -101,6 +130,7 @@ const CATALOG = {
   },
   'aiven': {
     name: 'Aiven',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://aiven.io',
     statusPageUrl: 'https://status.aiven.io',
@@ -109,6 +139,7 @@ const CATALOG = {
   },
   'alchemy': {
     name: 'Alchemy',
+    category: 'Web3 & Blockchain',
     type: 'statuspage',
     websiteUrl: 'https://alchemy.com',
     statusPageUrl: 'https://status.alchemy.com',
@@ -117,6 +148,7 @@ const CATALOG = {
   },
   'algolia': {
     name: 'Algolia',
+    category: 'Analytics & Data',
     type: 'algolia',
     websiteUrl: 'https://algolia.com',
     statusPageUrl: 'https://status.algolia.com',
@@ -125,6 +157,7 @@ const CATALOG = {
   },
   'amplitude': {
     name: 'Amplitude',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://amplitude.com',
     statusPageUrl: 'https://status.amplitude.com',
@@ -133,6 +166,7 @@ const CATALOG = {
   },
   'apify': {
     name: 'Apify',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://apify.com',
     statusPageUrl: 'https://status.apify.com',
@@ -141,6 +175,7 @@ const CATALOG = {
   },
   'apivideo': {
     name: 'api.video',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://api.video',
     statusPageUrl: 'https://status.api.video',
@@ -149,6 +184,7 @@ const CATALOG = {
   },
   'asana': {
     name: 'Asana',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://asana.com',
     statusPageUrl: 'https://status.asana.com',
@@ -157,6 +193,7 @@ const CATALOG = {
   },
   'assemblyai': {
     name: 'AssemblyAI',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://assemblyai.com',
     statusPageUrl: 'https://status.assemblyai.com',
@@ -165,6 +202,7 @@ const CATALOG = {
   },
   'atlassian': {
     name: 'Atlassian',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://atlassian.com',
     statusPageUrl: 'https://status.atlassian.com',
@@ -179,6 +217,7 @@ const CATALOG = {
   },
   'auth0': {
     name: 'Auth0',
+    category: 'Identity & Security',
     type: 'auth0',
     websiteUrl: 'https://auth0.com',
     statusPageUrl: 'https://status.auth0.com',
@@ -187,6 +226,7 @@ const CATALOG = {
   },
   'aws': {
     name: 'AWS',
+    category: 'Cloud & Infrastructure',
     type: 'awshealth',
     beta: true,
     websiteUrl: 'https://aws.amazon.com',
@@ -196,6 +236,7 @@ const CATALOG = {
   },
   'axiom': {
     name: 'Axiom',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://axiom.co',
     statusPageUrl: 'https://axiomdev.statuspage.io',
@@ -204,6 +245,7 @@ const CATALOG = {
   },
   'bandwidth': {
     name: 'Bandwidth',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://bandwidth.com',
     statusPageUrl: 'https://status.bandwidth.com',
@@ -212,6 +254,7 @@ const CATALOG = {
   },
   'baseten': {
     name: 'Baseten',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://baseten.co',
     statusPageUrl: 'https://status.baseten.co',
@@ -220,6 +263,7 @@ const CATALOG = {
   },
   'bigcommerce': {
     name: 'BigCommerce',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://bigcommerce.com',
     statusPageUrl: 'https://status.bigcommerce.com',
@@ -228,6 +272,7 @@ const CATALOG = {
   },
   'bitbucket': {
     name: 'Bitbucket',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://bitbucket.org',
     statusPageUrl: 'https://bitbucket.status.atlassian.com',
@@ -236,6 +281,7 @@ const CATALOG = {
   },
   'bitmovin': {
     name: 'Bitmovin',
+    category: 'CMS & Content',
     type: 'instatus',
     websiteUrl: 'https://bitmovin.com',
     statusPageUrl: 'https://status.bitmovin.com',
@@ -244,6 +290,7 @@ const CATALOG = {
   },
   'bitrise': {
     name: 'Bitrise',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://bitrise.io',
     statusPageUrl: 'https://status.bitrise.io',
@@ -252,6 +299,7 @@ const CATALOG = {
   },
   'bitwarden': {
     name: 'Bitwarden',
+    category: 'Identity & Security',
     type: 'hund',
     websiteUrl: 'https://bitwarden.com',
     statusPageUrl: 'https://status.bitwarden.com',
@@ -260,6 +308,7 @@ const CATALOG = {
   },
   'box': {
     name: 'Box',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://box.com',
     statusPageUrl: 'https://status.box.com',
@@ -268,6 +317,7 @@ const CATALOG = {
   },
   'braintrust': {
     name: 'Braintrust',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://braintrust.dev',
     statusPageUrl: 'https://status.braintrust.dev',
@@ -276,6 +326,7 @@ const CATALOG = {
   },
   'braze': {
     name: 'Braze',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://braze.com',
     statusPageUrl: 'https://status.braze.com',
@@ -284,6 +335,7 @@ const CATALOG = {
   },
   'brevo': {
     name: 'Brevo',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://brevo.com',
     statusPageUrl: 'https://status.brevo.com',
@@ -292,6 +344,7 @@ const CATALOG = {
   },
   'brex': {
     name: 'Brex',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://brex.com',
     statusPageUrl: 'https://status.brex.com',
@@ -300,6 +353,7 @@ const CATALOG = {
   },
   'browserbase': {
     name: 'Browserbase',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://browserbase.com',
     statusPageUrl: 'https://status.browserbase.com',
@@ -308,6 +362,7 @@ const CATALOG = {
   },
   'bugsnag': {
     name: 'BugSnag',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://bugsnag.com',
     statusPageUrl: 'https://bugsnag.status.smartbear.com',
@@ -316,6 +371,7 @@ const CATALOG = {
   },
   'buildkite': {
     name: 'Buildkite',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://buildkite.com',
     statusPageUrl: 'https://www.buildkitestatus.com',
@@ -324,6 +380,7 @@ const CATALOG = {
   },
   'bunny': {
     name: 'Bunny.net',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://bunny.net',
     statusPageUrl: 'https://status.bunny.net',
@@ -332,6 +389,7 @@ const CATALOG = {
   },
   'canva': {
     name: 'Canva',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://canva.com',
     statusPageUrl: 'https://www.canvastatus.com',
@@ -340,6 +398,7 @@ const CATALOG = {
   },
   'cerebras': {
     name: 'Cerebras',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://cerebras.ai',
     statusPageUrl: 'https://status.cerebras.ai',
@@ -348,6 +407,7 @@ const CATALOG = {
   },
   'chargebee': {
     name: 'Chargebee',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://chargebee.com',
     statusPageUrl: 'https://status.chargebee.com',
@@ -356,6 +416,7 @@ const CATALOG = {
   },
   'chroma': {
     name: 'Chroma',
+    category: 'Databases & Storage',
     type: 'instatus',
     websiteUrl: 'https://trychroma.com',
     statusPageUrl: 'https://status.trychroma.com',
@@ -364,6 +425,7 @@ const CATALOG = {
   },
   'circleci': {
     name: 'CircleCI',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://circleci.com',
     statusPageUrl: 'https://status.circleci.com',
@@ -372,6 +434,7 @@ const CATALOG = {
   },
   'claude': {
     name: 'Claude',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://claude.ai',
     statusPageUrl: 'https://status.claude.com',
@@ -380,6 +443,7 @@ const CATALOG = {
   },
   'clerk': {
     name: 'Clerk',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://clerk.com',
     statusPageUrl: 'https://status.clerk.com',
@@ -388,6 +452,7 @@ const CATALOG = {
   },
   'clever-cloud': {
     name: 'Clever Cloud',
+    category: 'Cloud & Infrastructure',
     type: 'cachet',
     beta: true,
     websiteUrl: 'https://clever-cloud.com',
@@ -397,6 +462,7 @@ const CATALOG = {
   },
   'clickhouse': {
     name: 'ClickHouse',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://clickhouse.com',
     statusPageUrl: 'https://status.clickhouse.com',
@@ -405,6 +471,7 @@ const CATALOG = {
   },
   'cloudflare': {
     name: 'Cloudflare',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://cloudflare.com',
     statusPageUrl: 'https://www.cloudflarestatus.com',
@@ -413,6 +480,7 @@ const CATALOG = {
   },
   'cloudinary': {
     name: 'Cloudinary',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://cloudinary.com',
     statusPageUrl: 'https://status.cloudinary.com',
@@ -421,6 +489,7 @@ const CATALOG = {
   },
   'cloudsmith': {
     name: 'Cloudsmith',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://cloudsmith.com',
     statusPageUrl: 'https://status.cloudsmith.com',
@@ -429,6 +498,7 @@ const CATALOG = {
   },
   'cockroachdb': {
     name: 'CockroachDB',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://cockroachlabs.com',
     statusPageUrl: 'https://status.cockroachlabs.cloud',
@@ -439,6 +509,7 @@ const CATALOG = {
   // codecov.io or codecov.com, only for the landing host they redirect to.
   'coda': {
     name: 'Coda',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://coda.io',
     statusPageUrl: 'https://status.coda.io',
@@ -447,6 +518,7 @@ const CATALOG = {
   },
   'codecov': {
     name: 'Codecov',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://codecov.io',
     statusPageUrl: 'https://status.codecov.com',
@@ -455,6 +527,7 @@ const CATALOG = {
   },
   'coderabbit': {
     name: 'CodeRabbit',
+    category: 'CI/CD & Developer Tools',
     type: 'instatus',
     websiteUrl: 'https://coderabbit.ai',
     statusPageUrl: 'https://status.coderabbit.ai',
@@ -463,6 +536,7 @@ const CATALOG = {
   },
   'cohere': {
     name: 'Cohere',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://cohere.com',
     statusPageUrl: 'https://status.cohere.com',
@@ -471,6 +545,7 @@ const CATALOG = {
   },
   'configcat': {
     name: 'ConfigCat',
+    category: 'CI/CD & Developer Tools',
     type: 'site24x7',
     websiteUrl: 'https://configcat.com',
     statusPageUrl: 'https://status.configcat.com',
@@ -479,6 +554,7 @@ const CATALOG = {
   },
   'confluence': {
     name: 'Confluence',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://atlassian.com/software/confluence',
     statusPageUrl: 'https://confluence.status.atlassian.com',
@@ -487,6 +563,7 @@ const CATALOG = {
   },
   'confluent': {
     name: 'Confluent',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://confluent.io',
     statusPageUrl: 'https://status.confluent.cloud',
@@ -495,6 +572,7 @@ const CATALOG = {
   },
   'contentful': {
     name: 'Contentful',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://contentful.com',
     statusPageUrl: 'https://www.contentfulstatus.com',
@@ -503,6 +581,7 @@ const CATALOG = {
   },
   'convex': {
     name: 'Convex',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://convex.dev',
     statusPageUrl: 'https://status.convex.dev',
@@ -511,6 +590,7 @@ const CATALOG = {
   },
   'courier': {
     name: 'Courier',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://courier.com',
     statusPageUrl: 'https://status.courier.com',
@@ -519,6 +599,7 @@ const CATALOG = {
   },
   'cratesio': {
     name: 'crates.io',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://crates.io',
     statusPageUrl: 'https://status.crates.io',
@@ -527,6 +608,7 @@ const CATALOG = {
   },
   'cursor': {
     name: 'Cursor',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://cursor.com',
     statusPageUrl: 'https://status.cursor.com',
@@ -535,6 +617,7 @@ const CATALOG = {
   },
   'customerio': {
     name: 'Customer.io',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://customer.io',
     statusPageUrl: 'https://customerio.statuspage.io',
@@ -543,6 +626,7 @@ const CATALOG = {
   },
   'daily': {
     name: 'Daily',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://daily.co',
     statusPageUrl: 'https://status.daily.co',
@@ -551,6 +635,7 @@ const CATALOG = {
   },
   'dashdoc': {
     name: 'Dashdoc',
+    category: 'Collaboration & Productivity',
     type: 'incidentio',
     websiteUrl: 'https://dashdoc.eu',
     statusPageUrl: 'https://www.dashdocstatus.com',
@@ -559,6 +644,7 @@ const CATALOG = {
   },
   'dashlane': {
     name: 'Dashlane',
+    category: 'Identity & Security',
     type: 'statusio',
     websiteUrl: 'https://dashlane.com',
     statusPageUrl: 'https://status.dashlane.com',
@@ -568,6 +654,7 @@ const CATALOG = {
   },
   'datadog': {
     name: 'Datadog',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://datadoghq.com',
     statusPageUrl: 'https://status.datadoghq.com',
@@ -576,6 +663,7 @@ const CATALOG = {
   },
   'dbtlabs': {
     name: 'dbt Labs',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://getdbt.com',
     statusPageUrl: 'https://status.getdbt.com',
@@ -584,6 +672,7 @@ const CATALOG = {
   },
   'deepgram': {
     name: 'Deepgram',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://deepgram.com',
     statusPageUrl: 'https://status.deepgram.com',
@@ -592,6 +681,7 @@ const CATALOG = {
   },
   'deno': {
     name: 'Deno',
+    category: 'CI/CD & Developer Tools',
     type: 'instatus',
     websiteUrl: 'https://deno.com',
     statusPageUrl: 'https://denostatus.com',
@@ -600,6 +690,7 @@ const CATALOG = {
   },
   'depot': {
     name: 'Depot',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://depot.dev',
     statusPageUrl: 'https://status.depot.dev',
@@ -608,6 +699,7 @@ const CATALOG = {
   },
   'digitalocean': {
     name: 'DigitalOcean',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://digitalocean.com',
     statusPageUrl: 'https://status.digitalocean.com',
@@ -616,6 +708,7 @@ const CATALOG = {
   },
   'discord': {
     name: 'Discord',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://discord.com',
     statusPageUrl: 'https://discordstatus.com',
@@ -624,6 +717,7 @@ const CATALOG = {
   },
   'docker': {
     name: 'Docker',
+    category: 'Cloud & Infrastructure',
     type: 'statusio',
     websiteUrl: 'https://docker.com',
     statusPageUrl: 'https://www.dockerstatus.com',
@@ -633,6 +727,7 @@ const CATALOG = {
   },
   'doppler': {
     name: 'Doppler',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://doppler.com',
     statusPageUrl: 'https://www.dopplerstatus.com',
@@ -643,6 +738,7 @@ const CATALOG = {
   // Statuspage instance; see proxy/fetchers/docusign.js.
   'docusign': {
     name: 'DocuSign',
+    category: 'Signing & Compliance',
     type: 'docusign',
     websiteUrl: 'https://docusign.com',
     statusPageUrl: 'https://health.docusign.com/status',
@@ -651,6 +747,7 @@ const CATALOG = {
   },
   'dropbox': {
     name: 'Dropbox',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://dropbox.com',
     statusPageUrl: 'https://status.dropbox.com',
@@ -659,6 +756,7 @@ const CATALOG = {
   },
   'e2b': {
     name: 'E2B',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://e2b.dev',
     statusPageUrl: 'https://status.e2b.dev',
@@ -667,6 +765,7 @@ const CATALOG = {
   },
   'elastic': {
     name: 'Elastic Cloud',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://elastic.co',
     statusPageUrl: 'https://status.elastic.co',
@@ -675,6 +774,7 @@ const CATALOG = {
   },
   'elevenlabs': {
     name: 'ElevenLabs',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://elevenlabs.io',
     statusPageUrl: 'https://status.elevenlabs.io',
@@ -683,6 +783,7 @@ const CATALOG = {
   },
   'expo': {
     name: 'Expo',
+    category: 'Mobile & Frontend',
     type: 'statuspage',
     websiteUrl: 'https://expo.dev',
     statusPageUrl: 'https://status.expo.dev',
@@ -691,6 +792,7 @@ const CATALOG = {
   },
   'fastly': {
     name: 'Fastly',
+    category: 'Cloud & Infrastructure',
     type: 'statuscast',
     websiteUrl: 'https://fastly.com',
     statusPageUrl: 'https://www.fastlystatus.com',
@@ -699,6 +801,7 @@ const CATALOG = {
   },
   'figma': {
     name: 'Figma',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://figma.com',
     statusPageUrl: 'https://status.figma.com',
@@ -707,6 +810,7 @@ const CATALOG = {
   },
   'filestack': {
     name: 'Filestack',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://filestack.com',
     statusPageUrl: 'https://status.filestack.com',
@@ -715,6 +819,7 @@ const CATALOG = {
   },
   'fireworks': {
     name: 'Fireworks AI',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://fireworks.ai',
     statusPageUrl: 'https://status.fireworks.ai',
@@ -723,6 +828,7 @@ const CATALOG = {
   },
   'fivetran': {
     name: 'Fivetran',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://fivetran.com',
     statusPageUrl: 'https://status.fivetran.com',
@@ -731,6 +837,7 @@ const CATALOG = {
   },
   'flyio': {
     name: 'Fly.io',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://fly.io',
     statusPageUrl: 'https://status.flyio.net',
@@ -739,6 +846,7 @@ const CATALOG = {
   },
   'front': {
     name: 'Front',
+    category: 'SaaS Suites',
     type: 'statuspage',
     websiteUrl: 'https://front.com',
     statusPageUrl: 'https://front.statuspage.io',
@@ -747,6 +855,7 @@ const CATALOG = {
   },
   'frontegg': {
     name: 'Frontegg',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://frontegg.com',
     statusPageUrl: 'https://status.frontegg.com',
@@ -755,6 +864,7 @@ const CATALOG = {
   },
   'fusionauth': {
     name: 'FusionAuth',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://fusionauth.io',
     statusPageUrl: 'https://status.fusionauth.io',
@@ -763,6 +873,7 @@ const CATALOG = {
   },
   'github': {
     name: 'GitHub',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://github.com',
     statusPageUrl: 'https://www.githubstatus.com',
@@ -771,6 +882,7 @@ const CATALOG = {
   },
   'gitlab': {
     name: 'GitLab',
+    category: 'CI/CD & Developer Tools',
     type: 'statusio',
     websiteUrl: 'https://gitlab.com',
     statusPageUrl: 'https://status.gitlab.com',
@@ -780,6 +892,7 @@ const CATALOG = {
   },
   'google-cloud': {
     name: 'Google Cloud',
+    category: 'Cloud & Infrastructure',
     type: 'google',
     websiteUrl: 'https://cloud.google.com',
     statusPageUrl: 'https://status.cloud.google.com',
@@ -791,6 +904,7 @@ const CATALOG = {
   },
   'google-workspace': {
     name: 'Google Workspace',
+    category: 'SaaS Suites',
     type: 'google',
     websiteUrl: 'https://workspace.google.com',
     statusPageUrl: 'https://www.google.com/appsstatus/dashboard',
@@ -804,6 +918,7 @@ const CATALOG = {
   },
   'grafana': {
     name: 'Grafana',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://grafana.com',
     statusPageUrl: 'https://status.grafana.com',
@@ -812,6 +927,7 @@ const CATALOG = {
   },
   'graphite': {
     name: 'Graphite',
+    category: 'CI/CD & Developer Tools',
     type: 'instatus',
     websiteUrl: 'https://graphite.dev',
     statusPageUrl: 'https://status.graphite.dev',
@@ -820,6 +936,7 @@ const CATALOG = {
   },
   'groq': {
     name: 'Groq',
+    category: 'AI & LLMs',
     type: 'incidentio',
     websiteUrl: 'https://groq.com',
     statusPageUrl: 'https://groqstatus.com',
@@ -828,6 +945,7 @@ const CATALOG = {
   },
   'harvest': {
     name: 'Harvest',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://harvestapp.com',
     statusPageUrl: 'https://www.harveststatus.com',
@@ -836,6 +954,7 @@ const CATALOG = {
   },
   'hashicorp': {
     name: 'HashiCorp',
+    category: 'CI/CD & Developer Tools',
     type: 'incidentio',
     websiteUrl: 'https://hashicorp.com',
     statusPageUrl: 'https://status.hashicorp.com',
@@ -844,6 +963,7 @@ const CATALOG = {
   },
   'hasura': {
     name: 'Hasura',
+    category: 'Databases & Storage',
     type: 'incidentio',
     websiteUrl: 'https://hasura.io',
     statusPageUrl: 'https://hasura-status.com',
@@ -852,6 +972,7 @@ const CATALOG = {
   },
   'heap': {
     name: 'Heap',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://heap.io',
     statusPageUrl: 'https://status.heap.io',
@@ -860,6 +981,7 @@ const CATALOG = {
   },
   'helpscout': {
     name: 'Help Scout',
+    category: 'SaaS Suites',
     type: 'statuspage',
     websiteUrl: 'https://helpscout.com',
     statusPageUrl: 'https://status.helpscout.com',
@@ -868,6 +990,7 @@ const CATALOG = {
   },
   'heroku': {
     name: 'Heroku',
+    category: 'Cloud & Infrastructure',
     type: 'heroku',
     websiteUrl: 'https://heroku.com',
     statusPageUrl: 'https://status.heroku.com',
@@ -876,6 +999,7 @@ const CATALOG = {
   },
   'honeybadger': {
     name: 'Honeybadger',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://honeybadger.io',
     statusPageUrl: 'https://status.honeybadger.io',
@@ -884,6 +1008,7 @@ const CATALOG = {
   },
   'honeycomb': {
     name: 'Honeycomb',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://honeycomb.io',
     statusPageUrl: 'https://status.honeycomb.io',
@@ -892,6 +1017,7 @@ const CATALOG = {
   },
   'hubspot': {
     name: 'HubSpot',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://hubspot.com',
     statusPageUrl: 'https://status.hubspot.com',
@@ -900,6 +1026,7 @@ const CATALOG = {
   },
   'imgix': {
     name: 'imgix',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://imgix.com',
     statusPageUrl: 'https://status.imgix.com',
@@ -908,6 +1035,7 @@ const CATALOG = {
   },
   'infisical': {
     name: 'Infisical',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://infisical.com',
     statusPageUrl: 'https://status.infisical.com',
@@ -916,6 +1044,7 @@ const CATALOG = {
   },
   'influxdata': {
     name: 'InfluxDB',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://influxdata.com',
     statusPageUrl: 'https://status.influxdata.com',
@@ -924,6 +1053,7 @@ const CATALOG = {
   },
   'infura': {
     name: 'Infura',
+    category: 'Web3 & Blockchain',
     type: 'statuspage',
     websiteUrl: 'https://infura.io',
     statusPageUrl: 'https://status.infura.io',
@@ -936,6 +1066,7 @@ const CATALOG = {
   // (/api/v2/incidents.json, resolved filtered client-side), not `statuspage`.
   'inngest': {
     name: 'Inngest',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://inngest.com',
     statusPageUrl: 'https://status.inngest.com',
@@ -944,6 +1075,7 @@ const CATALOG = {
   },
   'intercom': {
     name: 'Intercom',
+    category: 'Communication',
     type: 'incidentio',
     websiteUrl: 'https://intercom.com',
     statusPageUrl: 'https://www.finstatus.com',
@@ -952,6 +1084,7 @@ const CATALOG = {
   },
   'iterable': {
     name: 'Iterable',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://iterable.com',
     statusPageUrl: 'https://status.iterable.com',
@@ -960,6 +1093,7 @@ const CATALOG = {
   },
   'jfrog': {
     name: 'JFrog',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://jfrog.com',
     statusPageUrl: 'https://status.jfrog.io',
@@ -968,6 +1102,7 @@ const CATALOG = {
   },
   'jina': {
     name: 'Jina AI',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://jina.ai',
     statusPageUrl: 'https://status.jina.ai',
@@ -976,6 +1111,7 @@ const CATALOG = {
   },
   'jira': {
     name: 'Jira',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://atlassian.com/software/jira',
     statusPageUrl: 'https://jira-software.status.atlassian.com',
@@ -984,6 +1120,7 @@ const CATALOG = {
   },
   'jwplayer': {
     name: 'JW Player',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://jwplayer.com',
     statusPageUrl: 'https://status.jwplayer.com',
@@ -992,6 +1129,7 @@ const CATALOG = {
   },
   'kinde': {
     name: 'Kinde',
+    category: 'Identity & Security',
     type: 'instatus',
     websiteUrl: 'https://kinde.com',
     statusPageUrl: 'https://status.kinde.com',
@@ -1000,6 +1138,7 @@ const CATALOG = {
   },
   'klaviyo': {
     name: 'Klaviyo',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://klaviyo.com',
     statusPageUrl: 'https://status.klaviyo.com',
@@ -1008,6 +1147,7 @@ const CATALOG = {
   },
   'knock': {
     name: 'Knock',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://knock.app',
     statusPageUrl: 'https://status.knock.app',
@@ -1016,6 +1156,7 @@ const CATALOG = {
   },
   'kong': {
     name: 'Kong',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://konghq.com',
     statusPageUrl: 'https://kong.statuspage.io',
@@ -1024,6 +1165,7 @@ const CATALOG = {
   },
   'koyeb': {
     name: 'Koyeb',
+    category: 'Cloud & Infrastructure',
     type: 'instatus',
     websiteUrl: 'https://koyeb.com',
     statusPageUrl: 'https://status.koyeb.com',
@@ -1032,6 +1174,7 @@ const CATALOG = {
   },
   'lambdalabs': {
     name: 'Lambda',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://lambdalabs.com',
     statusPageUrl: 'https://status.lambda.ai',
@@ -1040,6 +1183,7 @@ const CATALOG = {
   },
   'launchdarkly': {
     name: 'LaunchDarkly',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://launchdarkly.com',
     statusPageUrl: 'https://status.launchdarkly.com',
@@ -1048,6 +1192,7 @@ const CATALOG = {
   },
   'letsencrypt': {
     name: "Let's Encrypt",
+    category: 'Identity & Security',
     type: 'statusio',
     websiteUrl: 'https://letsencrypt.org',
     statusPageUrl: 'https://letsencrypt.status.io',
@@ -1057,6 +1202,7 @@ const CATALOG = {
   },
   'linear': {
     name: 'Linear',
+    category: 'Collaboration & Productivity',
     type: 'incidentio',
     websiteUrl: 'https://linear.app',
     statusPageUrl: 'https://linearstatus.com',
@@ -1065,6 +1211,7 @@ const CATALOG = {
   },
   'linode': {
     name: 'Akamai Linode',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://linode.com',
     statusPageUrl: 'https://status.linode.com',
@@ -1073,6 +1220,7 @@ const CATALOG = {
   },
   'liveblocks': {
     name: 'Liveblocks',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://liveblocks.io',
     statusPageUrl: 'https://liveblocks.statuspage.io',
@@ -1081,6 +1229,7 @@ const CATALOG = {
   },
   'livekit': {
     name: 'LiveKit',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://livekit.io',
     statusPageUrl: 'https://status.livekit.io',
@@ -1089,6 +1238,7 @@ const CATALOG = {
   },
   'logrocket': {
     name: 'LogRocket',
+    category: 'Monitoring & Observability',
     type: 'incidentio',
     websiteUrl: 'https://logrocket.com',
     statusPageUrl: 'https://status.logrocket.com',
@@ -1097,6 +1247,7 @@ const CATALOG = {
   },
   'loom': {
     name: 'Loom',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://loom.com',
     statusPageUrl: 'https://loom.status.atlassian.com',
@@ -1105,6 +1256,7 @@ const CATALOG = {
   },
   'lucid': {
     name: 'Lucid',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://lucid.co',
     statusPageUrl: 'https://status.lucid.co',
@@ -1113,6 +1265,7 @@ const CATALOG = {
   },
   'mailgun': {
     name: 'Mailgun',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://mailgun.com',
     statusPageUrl: 'https://status.mailgun.com',
@@ -1121,6 +1274,7 @@ const CATALOG = {
   },
   'manageengine': {
     name: 'ManageEngine',
+    category: 'SaaS Suites',
     type: 'site24x7',
     websiteUrl: 'https://manageengine.com',
     statusPageUrl: 'https://status.manageengine.com',
@@ -1129,6 +1283,7 @@ const CATALOG = {
   },
   'mastodon': {
     name: 'Mastodon Social',
+    category: 'Communication',
     type: 'instatus',
     websiteUrl: 'https://mastodon.social',
     statusPageUrl: 'https://status.mastodon.social',
@@ -1137,6 +1292,7 @@ const CATALOG = {
   },
   'materialize': {
     name: 'Materialize',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://materialize.com',
     statusPageUrl: 'https://status.materialize.com',
@@ -1145,6 +1301,7 @@ const CATALOG = {
   },
   'mergify': {
     name: 'Mergify',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://mergify.com',
     statusPageUrl: 'https://status.mergify.com',
@@ -1153,6 +1310,7 @@ const CATALOG = {
   },
   'metabase': {
     name: 'Metabase',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://metabase.com',
     statusPageUrl: 'https://status.metabase.com',
@@ -1161,6 +1319,7 @@ const CATALOG = {
   },
   'mistral': {
     name: 'Mistral AI',
+    category: 'AI & LLMs',
     type: 'checkly',
     websiteUrl: 'https://mistral.ai',
     statusPageUrl: 'https://status.mistral.ai',
@@ -1170,6 +1329,7 @@ const CATALOG = {
   },
   'miro': {
     name: 'Miro',
+    category: 'Collaboration & Productivity',
     type: 'incidentio',
     websiteUrl: 'https://miro.com',
     statusPageUrl: 'https://status.miro.com',
@@ -1178,6 +1338,7 @@ const CATALOG = {
   },
   'mixpanel': {
     name: 'Mixpanel',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://mixpanel.com',
     statusPageUrl: 'https://www.mixpanelstatus.com',
@@ -1186,6 +1347,7 @@ const CATALOG = {
   },
   'mollie': {
     name: 'Mollie',
+    category: 'Payments & Commerce',
     type: 'instatus',
     websiteUrl: 'https://mollie.com',
     statusPageUrl: 'https://status.mollie.com',
@@ -1194,6 +1356,7 @@ const CATALOG = {
   },
   'monday': {
     name: 'monday.com',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://monday.com',
     statusPageUrl: 'https://status.monday.com',
@@ -1202,6 +1365,7 @@ const CATALOG = {
   },
   'mongodb': {
     name: 'MongoDB Atlas',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://mongodb.com',
     statusPageUrl: 'https://status.mongodb.com',
@@ -1210,6 +1374,7 @@ const CATALOG = {
   },
   'mural': {
     name: 'Mural',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://mural.co',
     statusPageUrl: 'https://status.mural.co',
@@ -1218,6 +1383,7 @@ const CATALOG = {
   },
   'mux': {
     name: 'Mux',
+    category: 'Mobile & Frontend',
     type: 'statuspage',
     websiteUrl: 'https://mux.com',
     statusPageUrl: 'https://status.mux.com',
@@ -1226,6 +1392,7 @@ const CATALOG = {
   },
   'n8n': {
     name: 'n8n',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://n8n.io',
     statusPageUrl: 'https://n8n.statuspage.io',
@@ -1234,6 +1401,7 @@ const CATALOG = {
   },
   'nabucasa': {
     name: 'Nabu Casa',
+    category: 'IoT & Smart Home',
     type: 'statuspage',
     websiteUrl: 'https://nabucasa.com',
     statusPageUrl: 'https://status.nabucasa.com',
@@ -1242,6 +1410,7 @@ const CATALOG = {
   },
   'neo4j': {
     name: 'Neo4j Aura',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://neo4j.com',
     statusPageUrl: 'https://status.neo4j.io',
@@ -1250,6 +1419,7 @@ const CATALOG = {
   },
   'neon': {
     name: 'Neon',
+    category: 'Databases & Storage',
     type: 'statusio',
     websiteUrl: 'https://neon.tech',
     statusPageUrl: 'https://neonstatus.com',
@@ -1259,6 +1429,7 @@ const CATALOG = {
   },
   'netlify': {
     name: 'Netlify',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://netlify.com',
     statusPageUrl: 'https://netlifystatus.com',
@@ -1267,6 +1438,7 @@ const CATALOG = {
   },
   'newrelic': {
     name: 'New Relic',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://newrelic.com',
     statusPageUrl: 'https://status.newrelic.com',
@@ -1275,6 +1447,7 @@ const CATALOG = {
   },
   'ngrok': {
     name: 'ngrok',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://ngrok.com',
     statusPageUrl: 'https://status.ngrok.com',
@@ -1283,6 +1456,7 @@ const CATALOG = {
   },
   'nhost': {
     name: 'Nhost',
+    category: 'Databases & Storage',
     type: 'instatus',
     websiteUrl: 'https://nhost.io',
     statusPageUrl: 'https://status.nhost.io',
@@ -1291,6 +1465,7 @@ const CATALOG = {
   },
   'northflank': {
     name: 'Northflank',
+    category: 'Cloud & Infrastructure',
     type: 'instatus',
     websiteUrl: 'https://northflank.com',
     statusPageUrl: 'https://status.northflank.com',
@@ -1299,6 +1474,7 @@ const CATALOG = {
   },
   'notion': {
     name: 'Notion',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://notion.so',
     statusPageUrl: 'https://www.notion-status.com',
@@ -1307,6 +1483,7 @@ const CATALOG = {
   },
   'novu': {
     name: 'Novu',
+    category: 'Communication',
     type: 'instatus',
     websiteUrl: 'https://novu.co',
     statusPageUrl: 'https://novu.instatus.com',
@@ -1315,6 +1492,7 @@ const CATALOG = {
   },
   'npm': {
     name: 'npm',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://npmjs.com',
     statusPageUrl: 'https://status.npmjs.org',
@@ -1323,6 +1501,7 @@ const CATALOG = {
   },
   'ona': {
     name: 'Ona',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://gitpod.io',
     statusPageUrl: 'https://onastatus.com',
@@ -1331,6 +1510,7 @@ const CATALOG = {
   },
   'onesignal': {
     name: 'OneSignal',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://onesignal.com',
     statusPageUrl: 'https://status.onesignal.com',
@@ -1339,6 +1519,7 @@ const CATALOG = {
   },
   'openai': {
     name: 'OpenAI',
+    category: 'AI & LLMs',
     type: 'incidentio',
     websiteUrl: 'https://openai.com',
     statusPageUrl: 'https://status.openai.com',
@@ -1347,6 +1528,7 @@ const CATALOG = {
   },
   'opsgenie': {
     name: 'Opsgenie',
+    category: 'Monitoring & Observability',
     type: 'incidentio',
     websiteUrl: 'https://atlassian.com/software/opsgenie',
     statusPageUrl: 'https://opsgenie.status.atlassian.com',
@@ -1355,6 +1537,7 @@ const CATALOG = {
   },
   'packagist': {
     name: 'Packagist',
+    category: 'CI/CD & Developer Tools',
     type: 'uptimerobot',
     websiteUrl: 'https://packagist.org',
     statusPageUrl: 'https://status.packagist.org',
@@ -1363,6 +1546,7 @@ const CATALOG = {
   },
   'pagerduty': {
     name: 'PagerDuty',
+    category: 'Monitoring & Observability',
     type: 'pagerduty',
     websiteUrl: 'https://pagerduty.com',
     statusPageUrl: 'https://status.pagerduty.com',
@@ -1371,6 +1555,7 @@ const CATALOG = {
   },
   'pandadoc': {
     name: 'PandaDoc',
+    category: 'Signing & Compliance',
     type: 'statuspage',
     websiteUrl: 'https://pandadoc.com',
     statusPageUrl: 'https://status.pandadoc.com',
@@ -1379,6 +1564,7 @@ const CATALOG = {
   },
   'pendo': {
     name: 'Pendo',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://pendo.io',
     statusPageUrl: 'https://status.pendo.io',
@@ -1387,6 +1573,7 @@ const CATALOG = {
   },
   'perplexity': {
     name: 'Perplexity',
+    category: 'AI & LLMs',
     type: 'instatus',
     websiteUrl: 'https://perplexity.ai',
     statusPageUrl: 'https://status.perplexity.com',
@@ -1395,6 +1582,7 @@ const CATALOG = {
   },
   'pinecone': {
     name: 'Pinecone',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://pinecone.io',
     statusPageUrl: 'https://status.pinecone.io',
@@ -1403,6 +1591,7 @@ const CATALOG = {
   },
   'plaid': {
     name: 'Plaid',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://plaid.com',
     statusPageUrl: 'https://status.plaid.com',
@@ -1411,6 +1600,7 @@ const CATALOG = {
   },
   'planetscale': {
     name: 'PlanetScale',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://planetscale.com',
     statusPageUrl: 'https://www.planetscalestatus.com',
@@ -1419,6 +1609,7 @@ const CATALOG = {
   },
   'plivo': {
     name: 'Plivo',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://plivo.com',
     statusPageUrl: 'https://status.plivo.com',
@@ -1427,6 +1618,7 @@ const CATALOG = {
   },
   'posthog': {
     name: 'PostHog',
+    category: 'Analytics & Data',
     type: 'posthog',
     websiteUrl: 'https://posthog.com',
     statusPageUrl: 'https://www.posthogstatus.com',
@@ -1435,6 +1627,7 @@ const CATALOG = {
   },
   'postman': {
     name: 'Postman',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://postman.com',
     statusPageUrl: 'https://status.postman.com',
@@ -1443,6 +1636,7 @@ const CATALOG = {
   },
   'postmark': {
     name: 'Postmark',
+    category: 'Email',
     type: 'sorryapp',
     websiteUrl: 'https://postmarkapp.com',
     statusPageUrl: 'https://status.postmarkapp.com',
@@ -1451,6 +1645,7 @@ const CATALOG = {
   },
   'prisma': {
     name: 'Prisma',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://prisma.io',
     statusPageUrl: 'https://prisma.statuspage.io',
@@ -1459,6 +1654,7 @@ const CATALOG = {
   },
   'prismic': {
     name: 'Prismic',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://prismic.io',
     statusPageUrl: 'https://status.prismic.io',
@@ -1467,6 +1663,7 @@ const CATALOG = {
   },
   'proton': {
     name: 'Proton',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://proton.me',
     statusPageUrl: 'https://status.proton.me',
@@ -1475,6 +1672,7 @@ const CATALOG = {
   },
   'pubnub': {
     name: 'PubNub',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://pubnub.com',
     statusPageUrl: 'https://status.pubnub.com',
@@ -1483,6 +1681,7 @@ const CATALOG = {
   },
   'pulumi': {
     name: 'Pulumi',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://pulumi.com',
     statusPageUrl: 'https://status.pulumi.com',
@@ -1491,6 +1690,7 @@ const CATALOG = {
   },
   'pusher': {
     name: 'Pusher',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://pusher.com',
     statusPageUrl: 'https://status.pusher.com',
@@ -1499,6 +1699,7 @@ const CATALOG = {
   },
   'python': {
     name: 'Python Infrastructure',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://python.org',
     statusPageUrl: 'https://status.python.org',
@@ -1507,6 +1708,7 @@ const CATALOG = {
   },
   'quicknode': {
     name: 'QuickNode',
+    category: 'Web3 & Blockchain',
     type: 'statuspage',
     websiteUrl: 'https://quicknode.com',
     statusPageUrl: 'https://status.quicknode.com',
@@ -1515,6 +1717,7 @@ const CATALOG = {
   },
   'railway': {
     name: 'Railway',
+    category: 'Cloud & Infrastructure',
     type: 'instatus',
     websiteUrl: 'https://railway.com',
     statusPageUrl: 'https://railway.instatus.com',
@@ -1523,6 +1726,7 @@ const CATALOG = {
   },
   'recurly': {
     name: 'Recurly',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://recurly.com',
     statusPageUrl: 'https://status.recurly.com',
@@ -1531,6 +1735,7 @@ const CATALOG = {
   },
   'redhat': {
     name: 'Red Hat',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://redhat.com',
     statusPageUrl: 'https://status.redhat.com',
@@ -1539,6 +1744,7 @@ const CATALOG = {
   },
   'replicate': {
     name: 'Replicate',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://replicate.com',
     statusPageUrl: 'https://www.replicatestatus.com',
@@ -1547,6 +1753,7 @@ const CATALOG = {
   },
   'render': {
     name: 'Render',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://render.com',
     statusPageUrl: 'https://status.render.com',
@@ -1555,6 +1762,7 @@ const CATALOG = {
   },
   'replit': {
     name: 'Replit',
+    category: 'CI/CD & Developer Tools',
     type: 'instatus',
     websiteUrl: 'https://replit.com',
     statusPageUrl: 'https://replit.instatus.com',
@@ -1563,6 +1771,7 @@ const CATALOG = {
   },
   'resend': {
     name: 'Resend',
+    category: 'Email',
     type: 'incidentio',
     websiteUrl: 'https://resend.com',
     statusPageUrl: 'https://resend-status.com',
@@ -1571,6 +1780,7 @@ const CATALOG = {
   },
   'retool': {
     name: 'Retool',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://retool.com',
     statusPageUrl: 'https://status.retool.com',
@@ -1579,6 +1789,7 @@ const CATALOG = {
   },
   'rollbar': {
     name: 'Rollbar',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://rollbar.com',
     statusPageUrl: 'https://status.rollbar.com',
@@ -1587,6 +1798,7 @@ const CATALOG = {
   },
   'rubygems': {
     name: 'RubyGems',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://rubygems.org',
     statusPageUrl: 'https://status.rubygems.org',
@@ -1595,6 +1807,7 @@ const CATALOG = {
   },
   'rudderstack': {
     name: 'RudderStack',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://rudderstack.com',
     statusPageUrl: 'https://status.rudderstack.com',
@@ -1603,6 +1816,7 @@ const CATALOG = {
   },
   'sambanova': {
     name: 'SambaNova',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://sambanova.ai',
     statusPageUrl: 'https://status.sambanova.ai',
@@ -1611,6 +1825,7 @@ const CATALOG = {
   },
   'sanity': {
     name: 'Sanity',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://sanity.io',
     statusPageUrl: 'https://www.sanity-status.com',
@@ -1619,6 +1834,7 @@ const CATALOG = {
   },
   'scaleway': {
     name: 'Scaleway',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://scaleway.com',
     statusPageUrl: 'https://status.scaleway.com',
@@ -1627,6 +1843,7 @@ const CATALOG = {
   },
   'segment': {
     name: 'Segment',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://segment.com',
     statusPageUrl: 'https://status.segment.com',
@@ -1635,6 +1852,7 @@ const CATALOG = {
   },
   'semaphore': {
     name: 'Semaphore',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://semaphoreci.com',
     statusPageUrl: 'https://status.semaphore.io',
@@ -1643,6 +1861,7 @@ const CATALOG = {
   },
   'semgrep': {
     name: 'Semgrep',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://semgrep.dev',
     statusPageUrl: 'https://status.semgrep.dev',
@@ -1651,6 +1870,7 @@ const CATALOG = {
   },
   'sendgrid': {
     name: 'SendGrid',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://sendgrid.com',
     statusPageUrl: 'https://status.sendgrid.com',
@@ -1659,6 +1879,7 @@ const CATALOG = {
   },
   'sentry': {
     name: 'Sentry',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://sentry.io',
     statusPageUrl: 'https://status.sentry.io',
@@ -1667,6 +1888,7 @@ const CATALOG = {
   },
   'shortcut': {
     name: 'Shortcut',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://shortcut.com',
     statusPageUrl: 'https://status.shortcut.com',
@@ -1675,6 +1897,7 @@ const CATALOG = {
   },
   'signal': {
     name: 'Signal',
+    category: 'Communication',
     type: 'signal',
     beta: true,
     websiteUrl: 'https://signal.org',
@@ -1684,6 +1907,7 @@ const CATALOG = {
   },
   'shopify': {
     name: 'Shopify',
+    category: 'Payments & Commerce',
     type: 'statuspage',
     websiteUrl: 'https://shopify.com',
     statusPageUrl: 'https://www.shopifystatus.com',
@@ -1692,6 +1916,7 @@ const CATALOG = {
   },
   'sinch': {
     name: 'Sinch',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://sinch.com',
     statusPageUrl: 'https://status.sinch.com',
@@ -1700,6 +1925,7 @@ const CATALOG = {
   },
   'sketch': {
     name: 'Sketch',
+    category: 'Collaboration & Productivity',
     type: 'instatus',
     websiteUrl: 'https://sketch.com',
     statusPageUrl: 'https://status.sketch.com',
@@ -1708,6 +1934,7 @@ const CATALOG = {
   },
   'slack': {
     name: 'Slack',
+    category: 'Communication',
     type: 'slack',
     websiteUrl: 'https://slack.com',
     statusPageUrl: 'https://slack-status.com',
@@ -1716,6 +1943,7 @@ const CATALOG = {
   },
   'smartsheet': {
     name: 'Smartsheet',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://smartsheet.com',
     statusPageUrl: 'https://status.smartsheet.com',
@@ -1724,6 +1952,7 @@ const CATALOG = {
   },
   'snowflake': {
     name: 'Snowflake',
+    category: 'Analytics & Data',
     type: 'statuspage',
     websiteUrl: 'https://snowflake.com',
     statusPageUrl: 'https://status.snowflake.com',
@@ -1732,6 +1961,7 @@ const CATALOG = {
   },
   'snyk': {
     name: 'Snyk',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://snyk.io',
     statusPageUrl: 'https://status.snyk.io',
@@ -1740,6 +1970,7 @@ const CATALOG = {
   },
   'sparkpost': {
     name: 'SparkPost',
+    category: 'Email',
     type: 'statuspage',
     websiteUrl: 'https://sparkpost.com',
     statusPageUrl: 'https://status.sparkpost.com',
@@ -1748,6 +1979,7 @@ const CATALOG = {
   },
   'squarespace': {
     name: 'Squarespace',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://squarespace.com',
     statusPageUrl: 'https://status.squarespace.com',
@@ -1756,6 +1988,7 @@ const CATALOG = {
   },
   'statuspage': {
     name: 'Statuspage',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://atlassian.com/software/statuspage',
     statusPageUrl: 'https://metastatuspage.com',
@@ -1764,6 +1997,7 @@ const CATALOG = {
   },
   'stripe': {
     name: 'Stripe',
+    category: 'Payments & Commerce',
     type: 'stripe',
     websiteUrl: 'https://stripe.com',
     statusPageUrl: 'https://status.stripe.com',
@@ -1772,6 +2006,7 @@ const CATALOG = {
   },
   'stytch': {
     name: 'Stytch',
+    category: 'Identity & Security',
     type: 'instatus',
     websiteUrl: 'https://stytch.com',
     statusPageUrl: 'https://status.stytch.com',
@@ -1780,6 +2015,7 @@ const CATALOG = {
   },
   'sumologic': {
     name: 'Sumo Logic',
+    category: 'Monitoring & Observability',
     type: 'statuspage',
     websiteUrl: 'https://sumologic.com',
     statusPageUrl: 'https://status.sumologic.com',
@@ -1788,6 +2024,7 @@ const CATALOG = {
   },
   'supabase': {
     name: 'Supabase',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://supabase.com',
     statusPageUrl: 'https://status.supabase.com',
@@ -1796,6 +2033,7 @@ const CATALOG = {
   },
   'supertokens': {
     name: 'SuperTokens',
+    category: 'Identity & Security',
     type: 'instatus',
     websiteUrl: 'https://supertokens.com',
     statusPageUrl: 'https://supertokens.instatus.com',
@@ -1804,6 +2042,7 @@ const CATALOG = {
   },
   'tailscale': {
     name: 'Tailscale',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://tailscale.com',
     statusPageUrl: 'https://status.tailscale.com',
@@ -1812,6 +2051,7 @@ const CATALOG = {
   },
   'telnyx': {
     name: 'Telnyx',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://telnyx.com',
     statusPageUrl: 'https://status.telnyx.com',
@@ -1820,6 +2060,7 @@ const CATALOG = {
   },
   'temporal': {
     name: 'Temporal',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://temporal.io',
     statusPageUrl: 'https://status.temporal.io',
@@ -1828,6 +2069,7 @@ const CATALOG = {
   },
   'tinybird': {
     name: 'Tinybird',
+    category: 'Analytics & Data',
     type: 'incidentio',
     websiteUrl: 'https://tinybird.co',
     statusPageUrl: 'https://status.tinybird.co',
@@ -1836,6 +2078,7 @@ const CATALOG = {
   },
   'todoist': {
     name: 'Todoist',
+    category: 'Collaboration & Productivity',
     type: 'instatus',
     websiteUrl: 'https://todoist.com',
     statusPageUrl: 'https://todoist.instatus.com',
@@ -1844,6 +2087,7 @@ const CATALOG = {
   },
   'travisci': {
     name: 'Travis CI',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://travis-ci.com',
     statusPageUrl: 'https://www.traviscistatus.com',
@@ -1852,6 +2096,7 @@ const CATALOG = {
   },
   'trello': {
     name: 'Trello',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://trello.com',
     statusPageUrl: 'https://trello.status.atlassian.com',
@@ -1860,6 +2105,7 @@ const CATALOG = {
   },
   'twilio': {
     name: 'Twilio',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://twilio.com',
     statusPageUrl: 'https://status.twilio.com',
@@ -1868,6 +2114,7 @@ const CATALOG = {
   },
   'twingate': {
     name: 'Twingate',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://twingate.com',
     statusPageUrl: 'https://status.twingate.com',
@@ -1876,6 +2123,7 @@ const CATALOG = {
   },
   'typeform': {
     name: 'Typeform',
+    category: 'Collaboration & Productivity',
     type: 'statuspage',
     websiteUrl: 'https://typeform.com',
     statusPageUrl: 'https://status.typeform.com',
@@ -1884,6 +2132,7 @@ const CATALOG = {
   },
   'uploadcare': {
     name: 'Uploadcare',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://uploadcare.com',
     statusPageUrl: 'https://status.uploadcare.com',
@@ -1892,6 +2141,7 @@ const CATALOG = {
   },
   'upstash': {
     name: 'Upstash',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://upstash.com',
     statusPageUrl: 'https://status.upstash.com',
@@ -1900,6 +2150,7 @@ const CATALOG = {
   },
   'vectara': {
     name: 'Vectara',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://vectara.com',
     statusPageUrl: 'https://status.vectara.com',
@@ -1908,6 +2159,7 @@ const CATALOG = {
   },
   'vercel': {
     name: 'Vercel',
+    category: 'Cloud & Infrastructure',
     type: 'statuspage',
     websiteUrl: 'https://vercel.com',
     statusPageUrl: 'https://www.vercel-status.com',
@@ -1916,6 +2168,7 @@ const CATALOG = {
   },
   'vespa': {
     name: 'Vespa',
+    category: 'Databases & Storage',
     type: 'instatus',
     websiteUrl: 'https://vespa.ai',
     statusPageUrl: 'https://status.vespa.ai',
@@ -1924,6 +2177,7 @@ const CATALOG = {
   },
   'vimeo': {
     name: 'Vimeo',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://vimeo.com',
     statusPageUrl: 'https://www.vimeostatus.com',
@@ -1932,6 +2186,7 @@ const CATALOG = {
   },
   'webflow': {
     name: 'Webflow',
+    category: 'CMS & Content',
     type: 'statuspage',
     websiteUrl: 'https://webflow.com',
     statusPageUrl: 'https://status.webflow.com',
@@ -1940,6 +2195,7 @@ const CATALOG = {
   },
   'whereby': {
     name: 'Whereby',
+    category: 'Communication',
     type: 'instatus',
     websiteUrl: 'https://whereby.com',
     statusPageUrl: 'https://whereby.instatus.com',
@@ -1948,6 +2204,7 @@ const CATALOG = {
   },
   'windsurf': {
     name: 'Windsurf',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://windsurf.com',
     statusPageUrl: 'https://status.windsurf.com',
@@ -1956,6 +2213,7 @@ const CATALOG = {
   },
   'wistia': {
     name: 'Wistia',
+    category: 'CMS & Content',
     type: 'instatus',
     websiteUrl: 'https://wistia.com',
     statusPageUrl: 'https://status.wistia.com',
@@ -1964,6 +2222,7 @@ const CATALOG = {
   },
   'workos': {
     name: 'WorkOS',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://workos.com',
     statusPageUrl: 'https://status.workos.com',
@@ -1972,6 +2231,7 @@ const CATALOG = {
   },
   'writer': {
     name: 'Writer',
+    category: 'AI & LLMs',
     type: 'statuspage',
     websiteUrl: 'https://writer.com',
     statusPageUrl: 'https://writer.statuspage.io',
@@ -1980,6 +2240,7 @@ const CATALOG = {
   },
   'yousign': {
     name: 'YouSign',
+    category: 'Signing & Compliance',
     type: 'statuspage',
     websiteUrl: 'https://yousign.com',
     statusPageUrl: 'https://yousign.statuspage.io',
@@ -1988,6 +2249,7 @@ const CATALOG = {
   },
   'zapier': {
     name: 'Zapier',
+    category: 'CI/CD & Developer Tools',
     type: 'incidentio',
     websiteUrl: 'https://zapier.com',
     statusPageUrl: 'https://status.zapier.com',
@@ -1996,6 +2258,7 @@ const CATALOG = {
   },
   'zendesk': {
     name: 'Zendesk',
+    category: 'SaaS Suites',
     type: 'zendesk',
     websiteUrl: 'https://zendesk.com',
     statusPageUrl: 'https://status.zendesk.com',
@@ -2004,6 +2267,7 @@ const CATALOG = {
   },
   'zilliz': {
     name: 'Zilliz',
+    category: 'Databases & Storage',
     type: 'statuspage',
     websiteUrl: 'https://zilliz.com',
     statusPageUrl: 'https://status.zilliz.com',
@@ -2012,6 +2276,7 @@ const CATALOG = {
   },
   'zitadel': {
     name: 'Zitadel',
+    category: 'Identity & Security',
     type: 'statuspage',
     websiteUrl: 'https://zitadel.com',
     statusPageUrl: 'https://status.zitadel.com',
@@ -2020,6 +2285,7 @@ const CATALOG = {
   },
   'zoho': {
     name: 'Zoho',
+    category: 'SaaS Suites',
     type: 'site24x7',
     websiteUrl: 'https://zoho.com',
     statusPageUrl: 'https://status.zoho.com',
@@ -2028,6 +2294,7 @@ const CATALOG = {
   },
   'zoom': {
     name: 'Zoom',
+    category: 'Communication',
     type: 'statuspage',
     websiteUrl: 'https://zoom.us',
     statusPageUrl: 'https://status.zoom.us',

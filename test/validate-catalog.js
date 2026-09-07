@@ -6,7 +6,10 @@ const path = require('path');
 const catalogSrc = fs.readFileSync(path.join(__dirname, '../proxy/catalog.js'), 'utf8');
 const CATALOG    = new Function(`${catalogSrc}; return CATALOG;`)();
 
-const REQUIRED_FIELDS = ['name', 'type', 'statusPageUrl'];
+const REQUIRED_FIELDS = ['name', 'type', 'category', 'statusPageUrl'];
+
+// Read from proxy/catalog.js so the closed set has one home.
+const VALID_CATEGORIES = new Set(new Function(`${catalogSrc}; return CATEGORIES;`)());
 
 const VALID_TYPES = new Set([
   'algolia',
@@ -49,6 +52,12 @@ for (const [id, entry] of Object.entries(CATALOG)) {
     if (entry[field] == null || entry[field] === '') {
       errors.push(`[${id}] missing required field: ${field}`);
     }
+  }
+
+  // Category must be one of the declared set, so a typo cannot quietly
+  // create a category of one.
+  if (entry.category != null && !VALID_CATEGORIES.has(entry.category)) {
+    errors.push(`[${id}] unknown category: "${entry.category}"`);
   }
 
   // Valid type

@@ -244,7 +244,7 @@ async function fetchIconIfNeeded(service, iconsDir) {
 
 // Fields always exposed in catalog.json.  Internal fetcher details (apiBase,
 // pageId, type) are omitted — consumers only need what they display or fetch.
-const CATALOG_PUBLIC_FIELDS = ['id', 'name', 'statusPageUrl', 'relatedDomains', 'searchAliases', 'beta'];
+const CATALOG_PUBLIC_FIELDS = ['id', 'name', 'category', 'statusPageUrl', 'relatedDomains', 'searchAliases', 'beta'];
 
 // Build a catalog entry, optionally enriched with live status and icon path.
 function publicEntry(service, result, iconUrl) {
