@@ -147,6 +147,33 @@ jobs:
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;');
 
+            // A failure reads the same whether it is a one-off blip or the 45th
+            // consecutive run, so triage means downloading CI artifacts to find out.
+            // These two turn each comment into its own answer to that question.
+            function humanizeAgo(fromIso, toIso) {
+              const ms = new Date(toIso) - new Date(fromIso);
+              if (!Number.isFinite(ms) || ms < 0) return null;
+              const min = Math.round(ms / 60000);
+              if (min < 60)   return `${min} minute${min === 1 ? '' : 's'}`;
+              const hours = Math.round(min / 60);
+              if (hours < 48) return `${hours} hour${hours === 1 ? '' : 's'}`;
+              const days = Math.round(hours / 24);
+              return `${days} day${days === 1 ? '' : 's'}`;
+            }
+
+            // Timestamp of the newest existing comment on the issue, or null when
+            // this is the first report.
+            async function previousReportAt(issue) {
+              if (!issue.comments) return null;
+              const { data } = await github.rest.issues.listComments({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issue.number,
+                per_page: 100, page: Math.ceil(issue.comments / 100),
+              });
+              const last = data[data.length - 1];
+              return last ? last.created_at : null;
+            }
+
             // Parse a log file into individual error entries. proxy/fetch-all.js
             // appends one entry per failure, shaped as:
             //   [timestamp] [type] statusPageUrl=url
@@ -184,10 +211,15 @@ jobs:
             // Build a structured GitHub markdown comment from parsed log entries.
             // The error is rendered expanded: the whole point of the issue is to
             // show what failed without anyone having to click to find out.
-            function buildCommentBody(serviceId, entries, reportedAt, jobUrl) {
+            function buildCommentBody(serviceId, entries, reportedAt, jobUrl, history) {
+              const cadence = history.previousAt
+                ? `Previous report ${humanizeAgo(history.previousAt, reportedAt)} ago · ${history.count + 1} reports so far`
+                : 'First report on this issue';
+
               const lines = [
                 `### Fetch failures for \`${serviceId}\` (${entries.length} occurrence(s))`,
                 `> Reported at \`${reportedAt}\` · [View CI run](${jobUrl})`,
+                `> ${cadence}`,
                 '',
               ];
 
@@ -411,7 +443,9 @@ jobs:
               const reportedAt = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
               const jobUrl     = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
               const entries    = parseLogEntries(logContent);
-              const body       = buildCommentBody(serviceId, entries, reportedAt, jobUrl);
+              const previousAt = await previousReportAt(issue);
+              const body       = buildCommentBody(serviceId, entries, reportedAt, jobUrl,
+                                                  { previousAt, count: issue.comments });
 
               await github.rest.issues.createComment({
                 owner: context.repo.owner, repo: context.repo.repo,
