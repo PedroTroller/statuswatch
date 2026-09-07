@@ -36,6 +36,7 @@ const {
   fetchInstatusStatus,
   fetchDocusignStatus,
 } = require('../proxy/fetchers');
+const { build: buildStatusPage } = require('../site/build.js');
 
 // ─── Test runner ──────────────────────────────────────────────────────────────
 
@@ -306,6 +307,69 @@ test('fetchStatuspageStatus: a non-2xx body is described, so a WAF block is reco
       return true;
     },
   );
+});
+
+// ─── site/build.js ────────────────────────────────────────────────────────────
+
+const PAGE_CATALOG = {
+  generatedAt: '2026-09-07T11:00:00Z',
+  ttl: 360,
+  services: [
+    { id: 'github', name: 'GitHub', category: 'CI/CD & Developer Tools',
+      statusPageUrl: 'https://www.githubstatus.com', status: 'operational',
+      iconUrl: 'icons/github.png',
+      components: [{ id: 'c1', name: 'Actions', status: 'operational', activeIncidents: [] }] },
+    { id: 'mistral', name: 'Mistral AI', category: 'AI & LLMs',
+      statusPageUrl: 'https://status.mistral.ai', status: 'partial_outage',
+      iconUrl: 'icons/mistral.png',
+      components: [
+        { id: 'c2', name: 'Chat Completions API', status: 'partial_outage',
+          activeIncidents: [{ id: 'i1', name: 'Free Tier Disabled', url: 'https://status.mistral.ai/i/1' }] },
+        { id: 'c3', name: 'Docs', status: 'operational', activeIncidents: [] },
+      ] },
+  ],
+};
+
+test('site/build: groups services into category sections', async () => {
+  const html = buildStatusPage(PAGE_CATALOG);
+  // Category order comes from CATEGORIES in proxy/catalog.js, where AI & LLMs
+  // precedes CI/CD, so it must not follow the order services appear in.
+  assert.ok(html.indexOf('AI &amp; LLMs') < html.indexOf('CI/CD &amp; Developer Tools'));
+  assert.match(html, /<li class="svc operational">[\s\S]*?GitHub/);
+  assert.match(html, /<li class="svc partial_outage">[\s\S]*?Mistral AI/);
+});
+
+test('site/build: the banner counts only what is not operational', async () => {
+  const html = buildStatusPage(PAGE_CATALOG);
+  assert.match(html, /1 of 2 services operational/);
+
+  const allGood = { ...PAGE_CATALOG,
+    services: PAGE_CATALOG.services.map(s => ({ ...s, status: 'operational' })) };
+  assert.match(buildStatusPage(allGood), /All 2 services operational/);
+});
+
+test('site/build: a troubled service shows its incident and affected component', async () => {
+  const html = buildStatusPage(PAGE_CATALOG);
+  assert.match(html, /href="https:\/\/status\.mistral\.ai\/i\/1">Free Tier Disabled/);
+  assert.match(html, /Chat Completions API/);
+  // Its healthy sibling component must not be listed: at 244 services that
+  // detail would be thousands of rows saying "operational".
+  assert.ok(!html.includes('>Docs <'));
+});
+
+test('site/build: an operational service carries no detail list', async () => {
+  const html = buildStatusPage(PAGE_CATALOG);
+  const githubRow = html.slice(html.indexOf('<li class="svc operational">'));
+  assert.ok(!githubRow.slice(0, githubRow.indexOf('</li>')).includes('class="detail"'));
+});
+
+test('site/build: service names are escaped', async () => {
+  const nasty = { ...PAGE_CATALOG, services: [
+    { ...PAGE_CATALOG.services[0], name: '<script>alert(1)</script>' },
+  ]};
+  const html = buildStatusPage(nasty);
+  assert.ok(!html.includes('<script>alert(1)</script>'));
+  assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
 });
 
 // ─── fetchDocusignStatus ──────────────────────────────────────────────────────

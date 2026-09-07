@@ -54,6 +54,9 @@ jobs:
       - name: Fetch all status pages
         run: node proxy/fetch-all.js
 
+      - name: Build the status page
+        run: node site/build.js
+
       - name: Upload fetch-error logs
         if: always()
         uses: actions/upload-artifact@v4
