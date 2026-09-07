@@ -7,6 +7,8 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 
 ![Service cloud](icon-cloud/service-cloud.svg)
 
+**[Live status of all tracked services →](https://pedrotroller.github.io/statuswatch/)**
+
 ---
 
 ## What it does
@@ -388,6 +390,7 @@ const CATALOG = {
   // …
   'myservice': {
     name: 'My Service',
+    category: 'CI/CD & Developer Tools',
     type: 'statuspage',
     websiteUrl: 'https://myservice.com',
     statusPageUrl: 'https://status.myservice.com',
@@ -514,6 +517,7 @@ Then:
 │   │   ├── _helpers.js  Shared utilities (safeJson, distributeIncidents…)
 │   │   └── *.js         One fetcher per platform type
 │   ├── fetch-all.js     Fetches all services and writes proxy/dist/
+│   ├── check-freshness.js  Fails when the published catalog.json goes stale
 │   ├── validate-catalog.js  Validates catalog.js entries
 │   ├── dev.js           Local dev server
 │   └── dist/            Generated status cache (gitignored)
@@ -532,7 +536,9 @@ Then:
 └── .github/
     ├── ISSUE_TEMPLATE/  Bug report, improvement, and new-service issue forms
     └── workflows/
-        ├── fetch-status.yaml  Fetches status cache and publishes to GitHub Pages
+        ├── fetch-status.yaml  Fetches status cache, builds the page, publishes to GitHub Pages
+        ├── freshness.yaml     Fails when the published catalog stops being refreshed
+        ├── test.yaml          Unit, catalog validation, integration and end-to-end suites
         └── publish.yaml       Builds, packages, and publishes extensions + worker on version tags
 ```
 
@@ -551,6 +557,7 @@ graph LR
 
     subgraph ci["GitHub Actions — fetch-status.yaml"]
         fetchAll["proxy/fetch-all.js\n+ catalog.js + fetchers/"]
+        buildPage["site/build.js"]
     end
 
     subgraph externalAPIs["External Status APIs"]
@@ -559,6 +566,7 @@ graph LR
 
     subgraph pages["GitHub Pages"]
         cache["catalog.json\nservices/<id>.json\nicons/<id>.png"]
+        page["index.html\n(status page)"]
     end
 
     subgraph extension["Browser Extension"]
@@ -570,9 +578,11 @@ graph LR
     ghCron -->|"schedule"| ci
     ci -->|"HTTP"| apis
     apis -->|"status data"| ci
-    ci -->|"deploy"| cache
+    fetchAll -->|"catalog.json"| buildPage
+    fetchAll -->|"deploy"| cache
+    buildPage -->|"deploy"| page
     cache -->|"poll"| sw
-    sw --> ui
+    sw -->|"badge · alerts"| ui
 ```
 
 #### Build & release pipeline
@@ -702,6 +712,8 @@ Each file includes `generatedAt` (ISO timestamp) and `ttl` (seconds) so consumer
 ```bash
 node proxy/fetch-all.js
 # writes proxy/dist/catalog.json, proxy/dist/services/*.json, proxy/dist/icons/*.png
+node site/build.js
+# renders proxy/dist/index.html from that catalog.json
 ```
 
 The Cloudflare Worker below is the primary 5-minute trigger; the native GH Actions `*/5` schedule is a fallback.
@@ -752,11 +764,28 @@ The watchdog alarm fires every 5 minutes to restart any stalled poller. Chrome e
 When `proxy/fetch-all.js` encounters a fetch failure, it writes a structured log to `proxy/dist/logs/<id>.log`:
 
 ```
-[2026-04-15T18:46:19Z] [incidentio] apiBase=https://status.openai.com/api/v2
-TypeError: Component status must be one of [operational, …], got "full_outage"
-    at new Component (common/value-objects/component.js:28:13)
-    at fetchIncidentioStatus (proxy/fetchers/statuspage.js:82:16)
-    …
+[2026-09-06T16:10:25.531Z] [uptimerobot] statusPageUrl=https://status.packagist.org
+TypeError: fetch failed
+Caused by: Error: connect ECONNREFUSED 142.132.149.97:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16)
 ```
 
-The `fetch-status.yaml` workflow uploads these logs as a CI artifact and posts them as structured comments on a per-service GitHub issue (auto-created on first failure, reopened on recurrence). Each occurrence is a collapsible block showing the timestamp, fetcher type, API base URL, and full stack trace.
+`err.stack` omits `cause`, which is where a failed fetch keeps the real reason
+(ENOTFOUND, ECONNREFUSED, TLS). The log walks that chain, so a bare
+`TypeError: fetch failed` never reaches an issue without its explanation.
+
+The `fetch-status.yaml` workflow uploads these logs as a CI artifact and posts them
+as structured comments on a per-service GitHub issue, created on first failure and
+reopened on recurrence. Each comment carries the error message, the URL, the
+content-type and a body excerpt, the full stack, and a cadence line:
+
+```
+> Previous report 5 minutes ago · 45 reports so far
+```
+
+That last line is what separates a one-off blip from a service that has failed on
+every run, without downloading CI artifacts to find out.
+
+GitHub refuses new comments once an issue reaches 2500 of them. At 2000 the issue is
+closed as a duplicate and a successor takes over, titled `[fetch-error] <id> (part N)`,
+linking back to the one it continues.
