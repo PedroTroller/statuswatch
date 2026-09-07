@@ -14,6 +14,7 @@ const VALID_TYPES = new Set([
   'awshealth',
   'cachet',
   'checkly',
+  'docusign',
   'google',
   'heroku',
   'hund',

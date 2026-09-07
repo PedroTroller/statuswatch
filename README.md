@@ -294,7 +294,7 @@ A Chrome and Firefox MV3 extension that tracks service health pages and notifies
 - [Zoho](https://status.zoho.com)
 
 ### Signing & Compliance
-- [DocuSign](https://status.docusign.com)
+- [DocuSign](https://health.docusign.com/status)
 - [PandaDoc](https://status.pandadoc.com)
 - [YouSign](https://yousign.statuspage.io)
 
@@ -577,12 +577,13 @@ Sorted by number of services using each integration.
 
 | Type | # | Used by |
 |---|---|---|
-| `statuspage` | 182 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
+| `statuspage` | 181 | GitHub, Cloudflare, Figma, Vercel, Netlify, and most others |
 | `instatus` | 23 | Airbyte, Deno, Stytch, Mollie, Railway, Vespa, Todoist, Replit, Sketch, and others |
 | `incidentio` | 13 | OpenAI, Linear, Resend, Dashdoc, Hasura, Groq, HashiCorp, Intercom, LogRocket, Opsgenie, and others |
 | `statusio` | 5 | Docker, GitLab, Neon, Dashlane, Let's Encrypt |
 | `site24x7` | 3 | ConfigCat, ManageEngine, Zoho |
 | `google` | 2 | Google Workspace, Google Cloud |
+| `docusign` | 1 | DocuSign |
 | `algolia` | 1 | Algolia |
 | `auth0` | 1 | Auth0 |
 | `awshealth` | 1 | AWS *(beta)* |

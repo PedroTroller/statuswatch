@@ -10,6 +10,9 @@
 //                    /api/status-page/{slug}/unresolved-incidents and uptime. Requires a
 //                    `slug` field on the catalog entry.
 //                    v1/v2 flat format and v3 JSON:API format (auto-detected per response).
+//   "docusign"     — DocuSign health centre (health.docusign.com); polls
+//                    /production/1ds/ssg/apps/health/dynamic/{components,incidents}.json
+//                    and reports the `product` tier of its component tree.
 //   "google"       — Google incident dashboard format (used by Google Workspace and Google Cloud);
 //                    polls /incidents.json + /products.json and derives status from active incidents
 //                    (those with no `end` field).
@@ -636,11 +639,13 @@ const CATALOG = {
     relatedDomains: ['doppler.com', '*.doppler.com'],
     searchAliases: ['secrets', 'environment variables', 'env vars', 'secret management', 'configuration'],
   },
+  // status.docusign.com redirects to the health centre, which is not a
+  // Statuspage instance; see proxy/fetchers/docusign.js.
   'docusign': {
     name: 'DocuSign',
-    type: 'statuspage',
+    type: 'docusign',
     websiteUrl: 'https://docusign.com',
-    statusPageUrl: 'https://status.docusign.com',
+    statusPageUrl: 'https://health.docusign.com/status',
     relatedDomains: ['docusign.com', '*.docusign.com', 'docusign.net', '*.docusign.net'],
     searchAliases: ['e-signature', 'esign', 'document signing', 'contracts'],
   },

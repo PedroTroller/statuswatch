@@ -6,6 +6,7 @@ const { fetchAuth0Status }                                = require('./auth0.js'
 const { fetchChecklyStatus }                              = require('./checkly.js');
 const { fetchAwsHealthStatus }                            = require('./awshealth.js');
 const { fetchCachetStatus }                               = require('./cachet.js');
+const { fetchDocusignStatus }                             = require('./docusign.js');
 const { fetchGoogleIncidentDashboard }                    = require('./google.js');
 const { fetchHerokuStatus }                               = require('./heroku.js');
 const { fetchHundStatus }                                 = require('./hund.js');
@@ -30,6 +31,7 @@ function fetchServiceStatus(service) {
   if (service.type === 'awshealth')    return fetchAwsHealthStatus(service);
   if (service.type === 'cachet')       return fetchCachetStatus(service);
   if (service.type === 'checkly')      return fetchChecklyStatus(service);
+  if (service.type === 'docusign')     return fetchDocusignStatus(service);
   if (service.type === 'google')       return fetchGoogleIncidentDashboard(service);
   if (service.type === 'heroku')       return fetchHerokuStatus(service);
   if (service.type === 'hund')         return fetchHundStatus(service);
@@ -56,6 +58,7 @@ module.exports = {
   fetchAwsHealthStatus,
   fetchCachetStatus,
   fetchChecklyStatus,
+  fetchDocusignStatus,
   fetchGoogleIncidentDashboard,
   fetchHerokuStatus,
   fetchHundStatus,

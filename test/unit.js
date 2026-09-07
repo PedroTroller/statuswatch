@@ -34,6 +34,7 @@ const {
   fetchSorryappStatus,
   fetchAwsHealthStatus,
   fetchInstatusStatus,
+  fetchDocusignStatus,
 } = require('../proxy/fetchers');
 
 // ─── Test runner ──────────────────────────────────────────────────────────────
@@ -305,6 +306,101 @@ test('fetchStatuspageStatus: a non-2xx body is described, so a WAF block is reco
       return true;
     },
   );
+});
+
+// ─── fetchDocusignStatus ──────────────────────────────────────────────────────
+
+const DOCUSIGN_SERVICE = {
+  id: 'docusign', name: 'DocuSign', statusPageUrl: 'https://ds.example.com/status',
+  relatedDomains: [], searchAliases: [],
+};
+const DS_API = 'https://ds.example.com/production/1ds/ssg/apps/health/dynamic';
+
+// A group holding a product, and a standalone product, each with site children:
+// the three tiers the real payload uses.
+const DS_COMPONENTS = [
+  { id: 'g1',  name: 'IAM Features', type: 'group',   parentId: null, status: 'available' },
+  { id: 'p1',  name: 'Notary',       type: 'product', parentId: 'g1', status: 'available' },
+  { id: 's1',  name: 'DEMO',         type: 'site',    parentId: 'p1', status: 'available' },
+  { id: 's2',  name: 'PROD',         type: 'site',    parentId: 'p1', status: 'available' },
+  { id: 'p2',  name: 'eSignature',   type: 'product', parentId: null, status: 'available' },
+  { id: 's3',  name: 'DEMO',         type: 'site',    parentId: 'p2', status: 'available' },
+  { id: 's4',  name: 'NA1',          type: 'site',    parentId: 'p2', status: 'available' },
+];
+
+const dsMock = (components, incidents = []) => mockFetch({
+  [`${DS_API}/components.json`]: { body: { components } },
+  [`${DS_API}/incidents.json`]:  { body: { incidents } },
+});
+
+test('fetchDocusignStatus: reports the product tier, not the repeated site names', async () => {
+  // The real payload carries 68 sites named DEMO, EU and US across products,
+  // which would be indistinguishable in a component list.
+  dsMock(DS_COMPONENTS);
+
+  const result = await fetchDocusignStatus(DOCUSIGN_SERVICE);
+  assert.deepEqual(result.components.map(c => c.name).sort(), ['Notary', 'eSignature']);
+  assert.strictEqual(result.status, StatusEnum.OPERATIONAL);
+});
+
+test('fetchDocusignStatus: a site outage surfaces on its parent product', async () => {
+  // Whether the platform rolls child status up into the parent is not
+  // observable while everything is available, so the fetcher must not rely on it.
+  const components = DS_COMPONENTS.map(c =>
+    c.id === 's4' ? { ...c, status: 'service_disruption' } : c);
+  dsMock(components);
+
+  const result = await fetchDocusignStatus(DOCUSIGN_SERVICE);
+  const esign = result.components.find(c => c.name === 'eSignature');
+  assert.equal(esign.status, 'major_outage');
+  assert.equal(result.components.find(c => c.name === 'Notary').status, 'operational');
+  assert.strictEqual(result.status, StatusEnum.MAJOR_OUTAGE);
+});
+
+test('fetchDocusignStatus: a product nested under a group is still reported', async () => {
+  const components = DS_COMPONENTS.map(c =>
+    c.id === 's1' ? { ...c, status: 'performance_degradation' } : c);
+  dsMock(components);
+
+  const result = await fetchDocusignStatus(DOCUSIGN_SERVICE);
+  assert.equal(result.components.find(c => c.name === 'Notary').status, 'degraded_performance');
+  assert.strictEqual(result.status, StatusEnum.DEGRADED_PERFORMANCE);
+});
+
+test('fetchDocusignStatus: unresolved incidents are surfaced, resolved ones filtered', async () => {
+  dsMock(DS_COMPONENTS, [
+    { incidentId: 'abc123', title: 'CLM workflow degradation',
+      status: 'investigating', impact: 'performance_degradation' },
+    { incidentId: 'old999', title: 'Fixed last week', status: 'resolved', impact: 'available' },
+  ]);
+
+  const result = await fetchDocusignStatus(DOCUSIGN_SERVICE);
+  assert.equal(result.activeIncidents.length, 1);
+  assert.equal(result.activeIncidents[0].name, 'CLM workflow degradation');
+  // The health centre has no /incidents/<id> route; it takes the id as a query.
+  assert.equal(result.activeIncidents[0].url,
+    'https://ds.example.com/status/incidents?id=abc123');
+});
+
+test('fetchDocusignStatus: a missing incidents endpoint is not fatal', async () => {
+  mockFetch({
+    [`${DS_API}/components.json`]: { body: { components: DS_COMPONENTS } },
+    [`${DS_API}/incidents.json`]:  { status: 404, body: null },
+  });
+
+  const result = await fetchDocusignStatus(DOCUSIGN_SERVICE);
+  assert.equal(result.components.length, 2);
+  assert.equal(result.activeIncidents.length, 0);
+});
+
+test('fetchDocusignStatus: throws on a non-2xx components endpoint', async () => {
+  mockFetch({
+    [`${DS_API}/components.json`]: { status: 503, body: null },
+    [`${DS_API}/incidents.json`]:  { body: { incidents: [] } },
+  });
+
+  await assert.rejects(() => fetchDocusignStatus(DOCUSIGN_SERVICE),
+    /Components API returned 503/);
 });
 
 // ─── fetchInstatusStatus ──────────────────────────────────────────────────────
