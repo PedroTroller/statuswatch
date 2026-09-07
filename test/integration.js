@@ -51,7 +51,16 @@ function assertResult(service, result) {
 
 // ─── Runner ────────────────────────────────────────────────────────────────────
 
-const TIMEOUT_MS = 15_000;
+// Matches proxy/fetch-all.js: a service the production fetcher would accept
+// must not fail here on a stricter budget.
+const TIMEOUT_MS  = 20_000;
+
+// The suite used to start every service at once. That was tenable at 122
+// services; at 244 it opens roughly 700 sockets from one runner, and the
+// congestion it creates is what the "TLS reset under load" note below refers
+// to. Timeouts caused that way are not a catalog problem, and they are not
+// retried, so they fail the run.
+const CONCURRENCY = 12;
 const C = {
   reset:  '\x1b[0m',
   green:  '\x1b[32m',
@@ -76,7 +85,7 @@ function statusLabel(status, width = 0) {
 
 async function runAll() {
   console.log(`\n${C.bold}StatusEnum Pages — integration tests${C.reset}`);
-  console.log(`${C.dim}${CATALOG.length} services, ${TIMEOUT_MS / 1000}s timeout each, running in parallel${C.reset}\n`);
+  console.log(`${C.dim}${CATALOG.length} services, ${TIMEOUT_MS / 1000}s timeout each, ${CONCURRENCY} at a time${C.reset}\n`);
 
   const nameW = Math.max(...CATALOG.map(s => s.name.length));
   const typeW = Math.max(...CATALOG.map(s => `[${s.type}]`.length));
@@ -92,13 +101,18 @@ async function runAll() {
         throw err;
       });
 
-  const jobs     = CATALOG.map(service =>
-    run(service)
-      .then(result => ({ service, result, error: null }))
-      .catch(error => ({ service, result: null, error }))
-  );
-
-  const outcomes = await Promise.all(jobs);
+  // Indexed writes keep the report in catalog order regardless of completion order.
+  const outcomes = new Array(CATALOG.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
+    while (next < CATALOG.length) {
+      const index   = next++;
+      const service = CATALOG[index];
+      outcomes[index] = await run(service)
+        .then(result => ({ service, result, error: null }))
+        .catch(error => ({ service, result: null, error }));
+    }
+  }));
 
   const statusValues = Object.values(StatusEnum).map(s => s.value === 'operational' ? 'ok' : s.value);
   const indW  = Math.max(...statusValues.map(s => s.length));
