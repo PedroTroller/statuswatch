@@ -103,21 +103,21 @@ function utf16beEncode(string) {
 
 // ─── Service stubs ────────────────────────────────────────────────────────────
 
-const STATUSPAGE_SERVICE  = { id: 'statuspage-test',  name: 'Statuspage Test',  type: 'statuspage',  apiBase: 'https://sp.example.com/api/v2',       statusPageUrl: 'https://sp.example.com' };
-const INCIDENTIO_SERVICE  = { id: 'incidentio-test',  name: 'IncidentIO Test',  type: 'incidentio',  apiBase: 'https://iio.example.com/api/v2',      statusPageUrl: 'https://iio.example.com' };
-const SLACK_SERVICE       = { id: 'slack',             name: 'Slack',            type: 'slack',       apiBase: 'https://slack-status.com/api/v1.0.0', statusPageUrl: 'https://slack-status.com' };
-const UPTIMEROBOT_SERVICE = { id: 'uptimerobot-test',  name: 'UptimeRobot Test', type: 'uptimerobot', apiBase: 'https://status.example.com/api',      statusPageUrl: 'https://status.example.com' };
-const STATUSIO_SERVICE    = { id: 'statusio-test',     name: 'Statusio Test',    type: 'statusio',    apiBase: 'https://api.status.io/1.0',            statusPageUrl: 'https://example.com', pageId: 'abc123' };
-const GOOGLE_SERVICE      = { id: 'google-workspace',  name: 'Google Workspace', type: 'google',      apiBase: 'https://status.example.com',          statusPageUrl: 'https://status.example.com' };
-const ZENDESK_SERVICE     = { id: 'zendesk',           name: 'Zendesk',          type: 'zendesk',     apiBase: 'https://status.zendesk.com',          statusPageUrl: 'https://status.zendesk.com' };
-const AUTH0_SERVICE       = { id: 'auth0',             name: 'Auth0',            type: 'auth0',       apiBase: 'https://status.auth0.com',            statusPageUrl: 'https://status.auth0.com' };
-const STATUSCAST_SERVICE  = { id: 'fastly',            name: 'Fastly',           type: 'statuscast',  apiBase: 'https://www.fastlystatus.com',        statusPageUrl: 'https://www.fastlystatus.com' };
-const PAGERDUTY_SERVICE   = { id: 'pagerduty',         name: 'PagerDuty',        type: 'pagerduty',   apiBase: 'https://status.pagerduty.com',        statusPageUrl: 'https://status.pagerduty.com' };
-const ALGOLIA_SERVICE     = { id: 'algolia',           name: 'Algolia',          type: 'algolia',     apiBase: 'https://status.algolia.com',          statusPageUrl: 'https://status.algolia.com' };
-const HEROKU_SERVICE      = { id: 'heroku',            name: 'Heroku',           type: 'heroku',      apiBase: 'https://status.heroku.com',           statusPageUrl: 'https://status.heroku.com' };
-const STRIPE_SERVICE      = { id: 'stripe',            name: 'Stripe',           type: 'stripe',      apiBase: 'https://status.stripe.com',           statusPageUrl: 'https://status.stripe.com' };
-const SORRYAPP_SERVICE    = { id: 'postmark',          name: 'Postmark',         type: 'sorryapp',    apiBase: 'https://status.postmarkapp.com',      statusPageUrl: 'https://status.postmarkapp.com' };
-const AWS_SERVICE         = { id: 'aws-health',        name: 'AWS Health',       type: 'awshealth',   apiBase: 'https://health.aws.amazon.com',       statusPageUrl: 'https://health.aws.com/health/status' };
+const STATUSPAGE_SERVICE  = { id: 'statuspage-test',  name: 'Statuspage Test',  type: 'statuspage',       statusPageUrl: 'https://sp.example.com' };
+const INCIDENTIO_SERVICE  = { id: 'incidentio-test',  name: 'IncidentIO Test',  type: 'incidentio',      statusPageUrl: 'https://iio.example.com' };
+const SLACK_SERVICE       = { id: 'slack',             name: 'Slack',            type: 'slack', statusPageUrl: 'https://slack-status.com' };
+const UPTIMEROBOT_SERVICE = { id: 'uptimerobot-test',  name: 'UptimeRobot Test', type: 'uptimerobot',      statusPageUrl: 'https://status.example.com' };
+const STATUSIO_SERVICE    = { id: 'statusio-test',     name: 'Statusio Test',    type: 'statusio',            statusPageUrl: 'https://example.com', pageId: 'abc123' };
+const GOOGLE_SERVICE      = { id: 'google-workspace',  name: 'Google Workspace', type: 'google',          statusPageUrl: 'https://status.example.com' };
+const ZENDESK_SERVICE     = { id: 'zendesk',           name: 'Zendesk',          type: 'zendesk',          statusPageUrl: 'https://status.zendesk.com' };
+const AUTH0_SERVICE       = { id: 'auth0',             name: 'Auth0',            type: 'auth0',            statusPageUrl: 'https://status.auth0.com' };
+const STATUSCAST_SERVICE  = { id: 'fastly',            name: 'Fastly',           type: 'statuscast',        statusPageUrl: 'https://www.fastlystatus.com' };
+const PAGERDUTY_SERVICE   = { id: 'pagerduty',         name: 'PagerDuty',        type: 'pagerduty',        statusPageUrl: 'https://status.pagerduty.com' };
+const ALGOLIA_SERVICE     = { id: 'algolia',           name: 'Algolia',          type: 'algolia',          statusPageUrl: 'https://status.algolia.com' };
+const HEROKU_SERVICE      = { id: 'heroku',            name: 'Heroku',           type: 'heroku',           statusPageUrl: 'https://status.heroku.com' };
+const STRIPE_SERVICE      = { id: 'stripe',            name: 'Stripe',           type: 'stripe',           statusPageUrl: 'https://status.stripe.com' };
+const SORRYAPP_SERVICE    = { id: 'postmark',          name: 'Postmark',         type: 'sorryapp',      statusPageUrl: 'https://status.postmarkapp.com' };
+const AWS_SERVICE         = { id: 'aws-health',        name: 'AWS Health',       type: 'awshealth',       statusPageUrl: 'https://health.aws.com/health/status' };
 
 // ─── safeJson ─────────────────────────────────────────────────────────────────
 
@@ -163,7 +163,7 @@ test('fetchStatuspageStatus: active incident surfaced', async () => {
       body: { components: [{ id: 'c1', name: 'API', status: 'partial_outage', group_id: null }] },
     },
     'https://sp.example.com/api/v2/incidents/unresolved.json': {
-      body: { incidents: [{ id: 'i1', name: 'API degraded', url: 'https://sp.example.com/i/i1', impact: 'major' }] },
+      body: { incidents: [{ id: 'i1', name: 'API degraded', shortlink: 'https://sp.example.com/i/i1', impact: 'major' }] },
     },
   });
 
