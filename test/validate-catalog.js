@@ -6,7 +6,7 @@ const path = require('path');
 const catalogSrc = fs.readFileSync(path.join(__dirname, '../proxy/catalog.js'), 'utf8');
 const CATALOG    = new Function(`${catalogSrc}; return CATALOG;`)();
 
-const REQUIRED_FIELDS = ['name', 'type', 'statusPageUrl', 'apiBase'];
+const REQUIRED_FIELDS = ['name', 'type', 'statusPageUrl'];
 
 const VALID_TYPES = new Set([
   'algolia',
