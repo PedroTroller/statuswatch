@@ -45,7 +45,7 @@ jobs:
       # Restore the full dist from the most recent run so fetch-all.js can skip
       # services fetched within the last 5 minutes and icons already on disk.
       - name: Restore dist cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: proxy/dist
           key: dist-${{ github.run_id }}
@@ -81,7 +81,7 @@ jobs:
 
       # Save after deploy so the cache always reflects what was actually deployed.
       - name: Save dist cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: proxy/dist
           key: dist-${{ github.run_id }}
