@@ -70,9 +70,18 @@ jobs:
         with:
           path: proxy/dist/
 
+      # `deploy-pages` takes no build-version input: it reads GITHUB_SHA
+      # (src/internal/context.js) and sends it as `pages_build_version`. Nothing
+      # is pushed between runs here, so every one of the ~288 daily deployments
+      # carried the *same* version, and Pages stopped applying them: it kept
+      # acknowledging each deployment with `success` while serving content
+      # frozen for hours at a time. Overriding the variable is the only way to
+      # give each deployment a version of its own.
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+        env:
+          GITHUB_SHA: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Clear logs before caching — they were already uploaded as an artifact and
       # must not accumulate across runs or be re-reported on the next cycle.
