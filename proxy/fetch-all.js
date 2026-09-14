@@ -262,7 +262,17 @@ function publicEntry(service, result, iconUrl) {
 
 // ─── Freshness check ──────────────────────────────────────────────────────────
 
-const FRESH_MS = TTL_OPERATIONAL_S * 1000; // 6 minutes — matches operational TTL
+// The cache guards against a burst of runs, not against the normal cycle.
+//
+// It used to be TTL_OPERATIONAL_S (6 minutes), wider than the 5-minute period
+// the Cloudflare worker dispatches on (cron-worker/wrangler.toml). A service
+// fetched on one run was therefore still "fresh" on the next and got skipped,
+// so it only ever refreshed every other run: data up to 10 minutes old, behind
+// a catalog advertising a 6-minute TTL. Staying under the dispatch period makes
+// each cycle refresh every service once, while two runs landing close together
+// (a push, or the hourly safety net firing next to a dispatch) still hit cache.
+const DISPATCH_PERIOD_MS = 5 * 60 * 1000;
+const FRESH_MS           = DISPATCH_PERIOD_MS - 60_000; // 4 minutes
 
 // Returns the parsed cached result for a service, or null if absent/unreadable.
 function readCached(servicesDir, id) {
@@ -273,8 +283,9 @@ function readCached(servicesDir, id) {
   }
 }
 
-// A cached result is fresh when it has no error, was fully operational, and was fetched within 5 minutes.
-// Non-operational or maintenance statuses are always re-fetched regardless of age.
+// A cached result is fresh when it has no error, was fully operational, and was
+// fetched within FRESH_MS. Non-operational or maintenance statuses are always
+// re-fetched regardless of age.
 function isFresh(cached) {
   return cached && !cached.error && cached.status === 'operational' && (Date.now() - cached.lastFetched) < FRESH_MS;
 }
@@ -363,21 +374,26 @@ async function main() {
   console.log(`\nDone — ${fetchedCount + failedCount} fetched (${failedCount} failed), ${skippedCount} skipped  |  ${iconsOk}/${CATALOG.length} icons`);
 
   // ── catalog.json ────────────────────────────────────────────────────────────
-  // Written only when at least one service was re-fetched (success or failure).
-  if (fetchedCount + failedCount > 0) {
-    const resultMap = Object.fromEntries(outcomes.map(({ service, result }) => [service.id, result]));
-    const iconMap   = Object.fromEntries(iconOutcomes.map(({ id, iconUrl }) => [id, iconUrl]));
-    const catalogPayload = {
-      generatedAt,
-      ttl: TTL_OPERATIONAL_S,
-      services: CATALOG.map(s => publicEntry(s, resultMap[s.id], iconMap[s.id])),
-    };
-    fs.writeFileSync(
-      path.join(outDir, 'catalog.json'),
-      JSON.stringify(catalogPayload),
-    );
-    console.log(`Written → proxy/dist/catalog.json  (${CATALOG.length} services, enriched)`);
-  }
+  // Written on every run, including one where every service came from cache.
+  //
+  // `outcomes` already holds a result for all 244 services, cached ones
+  // included, so the catalog is complete whatever the fetch did. Skipping the
+  // write when nothing was re-fetched used to leave the restored cache's file
+  // in place, and the run then republished it with its original `generatedAt`.
+  // That is indistinguishable, from outside, from a pipeline that has stopped:
+  // it is exactly what proxy/check-freshness.js reports as stale.
+  const resultMap = Object.fromEntries(outcomes.map(({ service, result }) => [service.id, result]));
+  const iconMap   = Object.fromEntries(iconOutcomes.map(({ id, iconUrl }) => [id, iconUrl]));
+  const catalogPayload = {
+    generatedAt,
+    ttl: TTL_OPERATIONAL_S,
+    services: CATALOG.map(s => publicEntry(s, resultMap[s.id], iconMap[s.id])),
+  };
+  fs.writeFileSync(
+    path.join(outDir, 'catalog.json'),
+    JSON.stringify(catalogPayload),
+  );
+  console.log(`Written → proxy/dist/catalog.json  (${CATALOG.length} services, enriched)`);
 
   // ── index.html ───────────────────────────────────────────────────────────────
   const REPO_URL = 'https://github.com/PedroTroller/statuswatch';
